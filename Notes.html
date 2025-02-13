@@ -1736,6 +1736,10 @@ km.cluster 1 2 3
 <section id="basic-theory-of-regression-model" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="basic-theory-of-regression-model"><span class="header-section-number">4.1</span> Basic theory of Regression Model</h2>
 <ul>
+<li>Interpretation of coefficient</li>
+<li>Qualitative Variables</li>
+<li>Interaction variables</li>
+<li>Non-linear effects</li>
 <li>(Copy over from Stat learning)</li>
 </ul>
 </section>
@@ -1755,6 +1759,416 @@ km.cluster 1 2 3
 </section>
 <section id="pcr-regression" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="pcr-regression"><span class="header-section-number">4.2.3</span> PCR regression</h3>
+<section id="theory-1" class="level4" data-number="4.2.3.1">
+<h4 data-number="4.2.3.1" class="anchored" data-anchor-id="theory-1"><span class="header-section-number">4.2.3.1</span> Theory</h4>
+<ul>
+<li>PCR perform better: Lower variance but higher bias (When <span class="math inline">\(M&lt;p\)</span>)</li>
+<li>When <span class="math inline">\(M=p\)</span> and no dimension reduction occurs, results are the same as OLS method.</li>
+</ul>
+</section>
+<section id="example-1" class="level4" data-number="4.2.3.2">
+<h4 data-number="4.2.3.2" class="anchored" data-anchor-id="example-1"><span class="header-section-number">4.2.3.2</span> Example 1</h4>
+<p>Used when there are correlated predictors in the model:</p>
+<p>The code below does PCA and the regression separately</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pls)</span>
+<span id="cb209-2"><a href="#cb209-2" aria-hidden="true" tabindex="-1"></a>blood <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Datasets/BPressure.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb209-3"><a href="#cb209-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(blood)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            BP      Chol       Age
+BP   1.0000000 0.6103997 0.8421835
+Chol 0.6103997 1.0000000 0.8360868
+Age  0.8421835 0.8360868 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a>reg.re <span class="ot">&lt;-</span> <span class="fu">lm</span>(BP<span class="sc">~</span>., <span class="at">data=</span>blood)</span>
+<span id="cb211-2"><a href="#cb211-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg.re)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = BP ~ ., data = blood)
+
+Residuals:
+      1       2       3       4       5       6       7 
+ 0.6372  2.3373  3.6873 -0.9627  0.6067  1.9395 -8.2453 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)  169.538    205.802   0.824   0.4563  
+Chol          -1.283      1.919  -0.668   0.5406  
+Age            2.933      1.240   2.366   0.0772 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.809 on 4 degrees of freedom
+Multiple R-squared:  0.7385,    Adjusted R-squared:  0.6077 
+F-statistic: 5.647 on 2 and 4 DF,  p-value: 0.0684</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb213"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(reg.re, blood)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2        3        4        5        6        7 
+119.3628 122.6627 124.3127 125.9627 134.3933 138.0605 127.2453 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb215"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(blood[,<span class="sc">-</span><span class="dv">1</span>], <span class="at">scale=</span><span class="cn">TRUE</span>) <span class="co"># Removing the BP column</span></span>
+<span id="cb215-2"><a href="#cb215-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                         PC1     PC2
+Standard deviation     1.355 0.40486
+Proportion of Variance 0.918 0.08196
+Cumulative Proportion  0.918 1.00000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb217"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             PC1         PC2
+[1,] -2.06338636  0.10379457
+[2,] -0.81497509 -0.16482081
+[3,] -0.19076945 -0.29912850
+[4,]  0.43343619 -0.43343619
+[5,]  0.16482081  0.81497509
+[6,]  2.41669438  0.03279536
+[7,]  0.05417952 -0.05417952</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb219"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb219-1"><a href="#cb219-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>rotation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           PC1        PC2
+Chol 0.7071068 -0.7071068
+Age  0.7071068  0.7071068</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb221"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb221-1"><a href="#cb221-1" aria-hidden="true" tabindex="-1"></a>lmpr <span class="ot">&lt;-</span> <span class="fu">lm</span>(blood<span class="sc">$</span>BP<span class="sc">~</span>pr.out<span class="sc">$</span>x[,<span class="dv">1</span>]) <span class="co"># Using only the first principle component </span></span>
+<span id="cb221-2"><a href="#cb221-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmpr)               </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = blood$BP ~ pr.out$x[, 1])
+
+Residuals:
+     1      2      3      4      5      6      7 
+ 1.434  1.072  1.391 -4.290  6.863  2.191 -8.661 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    127.429      2.073  61.457 2.16e-08 ***
+pr.out$x[, 1]    4.295      1.653   2.599   0.0483 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.486 on 5 degrees of freedom
+Multiple R-squared:  0.5746,    Adjusted R-squared:  0.4895 
+F-statistic: 6.753 on 1 and 5 DF,  p-value: 0.04832</code></pre>
+</div>
+</div>
+<p>The code below uses a predefined function for PCR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb223"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb223-1"><a href="#cb223-1" aria-hidden="true" tabindex="-1"></a>pcr.re1 <span class="ot">&lt;-</span> <span class="fu">pcr</span>(BP<span class="sc">~</span>., <span class="at">data=</span>blood, <span class="at">scale=</span><span class="cn">TRUE</span>, <span class="at">ncomp=</span><span class="dv">1</span>)</span>
+<span id="cb223-2"><a href="#cb223-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr.re1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 7 2 
+    Y dimension: 7 1
+Fit method: svdpc
+Number of components considered: 1
+TRAINING: % variance explained
+    1 comps
+X     91.80
+BP    57.46</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb225"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb225-1"><a href="#cb225-1" aria-hidden="true" tabindex="-1"></a>pcr.re1<span class="sc">$</span>fitted.values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>, , 1 comps
+
+        BP
+1 118.5659
+2 123.9281
+3 126.6092
+4 129.2903
+5 128.1365
+6 137.8088
+7 127.6613</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb227"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb227-1"><a href="#cb227-1" aria-hidden="true" tabindex="-1"></a>newx1 <span class="ot">&lt;-</span> pcr.re1<span class="sc">$</span>scores <span class="co"># Obtains the principal component score</span></span>
+<span id="cb227-2"><a href="#cb227-2" aria-hidden="true" tabindex="-1"></a>newx1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Comp 1
+1 -2.06338636
+2 -0.81497509
+3 -0.19076945
+4  0.43343619
+5  0.16482081
+6  2.41669438
+7  0.05417952
+attr(,"class")
+[1] "scores"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb229"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb229-1"><a href="#cb229-1" aria-hidden="true" tabindex="-1"></a>newreg1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(blood<span class="sc">$</span>BP <span class="sc">~</span> newx1)</span>
+<span id="cb229-2"><a href="#cb229-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(newreg1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = blood$BP ~ newx1)
+
+Residuals:
+     1      2      3      4      5      6      7 
+ 1.434  1.072  1.391 -4.290  6.863  2.191 -8.661 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  127.429      2.073  61.457 2.16e-08 ***
+newx1          4.295      1.653   2.599   0.0483 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.486 on 5 degrees of freedom
+Multiple R-squared:  0.5746,    Adjusted R-squared:  0.4895 
+F-statistic: 6.753 on 1 and 5 DF,  p-value: 0.04832</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb231"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb231-1"><a href="#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If you use M=p, then you go back to the original OLS method.</span></span>
+<span id="cb231-2"><a href="#cb231-2" aria-hidden="true" tabindex="-1"></a>pcr.re2 <span class="ot">&lt;-</span> <span class="fu">pcr</span>(BP<span class="sc">~</span>., <span class="at">data=</span>blood, <span class="at">scale=</span><span class="cn">TRUE</span>, <span class="at">ncomp=</span><span class="dv">2</span>)</span>
+<span id="cb231-3"><a href="#cb231-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr.re2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 7 2 
+    Y dimension: 7 1
+Fit method: svdpc
+Number of components considered: 2
+TRAINING: % variance explained
+    1 comps  2 comps
+X     91.80   100.00
+BP    57.46    73.85</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb233"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb233-1"><a href="#cb233-1" aria-hidden="true" tabindex="-1"></a>pcr.re2<span class="sc">$</span>fitted.values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>, , 1 comps
+
+        BP
+1 118.5659
+2 123.9281
+3 126.6092
+4 129.2903
+5 128.1365
+6 137.8088
+7 127.6613
+
+, , 2 comps
+
+        BP
+1 119.3628
+2 122.6627
+3 124.3127
+4 125.9627
+5 134.3933
+6 138.0605
+7 127.2453</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb235"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb235-1"><a href="#cb235-1" aria-hidden="true" tabindex="-1"></a>newx2 <span class="ot">&lt;-</span> pcr.re2<span class="sc">$</span>scores</span>
+<span id="cb235-2"><a href="#cb235-2" aria-hidden="true" tabindex="-1"></a>newx2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Comp 1      Comp 2
+1 -2.06338636  0.10379457
+2 -0.81497509 -0.16482081
+3 -0.19076945 -0.29912850
+4  0.43343619 -0.43343619
+5  0.16482081  0.81497509
+6  2.41669438  0.03279536
+7  0.05417952 -0.05417952
+attr(,"class")
+[1] "scores"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb237"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb237-1"><a href="#cb237-1" aria-hidden="true" tabindex="-1"></a>newreg2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(blood<span class="sc">$</span>BP <span class="sc">~</span> newx2)</span>
+<span id="cb237-2"><a href="#cb237-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(newreg2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = blood$BP ~ newx2)
+
+Residuals:
+      1       2       3       4       5       6       7 
+ 0.6372  2.3373  3.6873 -0.9627  0.6067  1.9395 -8.2453 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  127.429      1.818  70.107 2.48e-07 ***
+newx2Comp 1    4.295      1.449   2.964   0.0414 *  
+newx2Comp 2    7.677      4.849   1.583   0.1885    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.809 on 4 degrees of freedom
+Multiple R-squared:  0.7385,    Adjusted R-squared:  0.6077 
+F-statistic: 5.647 on 2 and 4 DF,  p-value: 0.0684</code></pre>
+</div>
+</div>
+</section>
+<section id="example-1-1" class="level4" data-number="4.2.3.3">
+<h4 data-number="4.2.3.3" class="anchored" data-anchor-id="example-1-1"><span class="header-section-number">4.2.3.3</span> Example 1</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb239"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb239-1"><a href="#cb239-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
+<span id="cb239-2"><a href="#cb239-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pls)</span>
+<span id="cb239-3"><a href="#cb239-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "AtBat"     "Hits"      "HmRun"     "Runs"      "RBI"       "Walks"    
+ [7] "Years"     "CAtBat"    "CHits"     "CHmRun"    "CRuns"     "CRBI"     
+[13] "CWalks"    "League"    "Division"  "PutOuts"   "Assists"   "Errors"   
+[19] "Salary"    "NewLeague"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb241"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb241-1"><a href="#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 322  20</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb243"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb243-1"><a href="#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(Hitters<span class="sc">$</span>Salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 59</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb245"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb245-1"><a href="#cb245-1" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb245-2"><a href="#cb245-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Hitters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 263  20</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb247"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb247-1"><a href="#cb247-1" aria-hidden="true" tabindex="-1"></a><span class="co"># splitting train and test set</span></span>
+<span id="cb247-2"><a href="#cb247-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb247-3"><a href="#cb247-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Hitters), <span class="fu">nrow</span>(Hitters)<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb247-4"><a href="#cb247-4" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> (<span class="sc">-</span>train)</span>
+<span id="cb247-5"><a href="#cb247-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-6"><a href="#cb247-6" aria-hidden="true" tabindex="-1"></a><span class="co"># run PCR on the training data with Cross Validation</span></span>
+<span id="cb247-7"><a href="#cb247-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb247-8"><a href="#cb247-8" aria-hidden="true" tabindex="-1"></a>pcr.fit <span class="ot">&lt;-</span> <span class="fu">pcr</span>(Salary<span class="sc">~</span>., </span>
+<span id="cb247-9"><a href="#cb247-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">data=</span>Hitters, </span>
+<span id="cb247-10"><a href="#cb247-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">subset=</span>train,</span>
+<span id="cb247-11"><a href="#cb247-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">scale=</span><span class="cn">TRUE</span>, </span>
+<span id="cb247-12"><a href="#cb247-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">validation=</span><span class="st">"CV"</span>) <span class="co"># By default, it uses 10 fold validation.</span></span>
+<span id="cb247-13"><a href="#cb247-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 131 19 
+    Y dimension: 131 1
+Fit method: svdpc
+Number of components considered: 19
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+CV           428.3    326.2    332.2    326.2    327.6    322.5    326.2
+adjCV        428.3    325.7    331.5    325.1    326.7    321.3    324.9
+       7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps
+CV       331.9    328.3    331.1     332.1     334.5     338.9     337.7
+adjCV    330.3    326.6    328.6     329.9     332.2     336.4     335.1
+       14 comps  15 comps  16 comps  17 comps  18 comps  19 comps
+CV        338.7     341.7     340.1     344.2     353.3     345.0
+adjCV     336.1     338.9     337.0     340.9     349.3     341.1
+
+TRAINING: % variance explained
+        1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps
+X         39.32    61.57    71.96    80.83    85.95    89.99    93.25    95.34
+Salary    43.87    43.93    47.36    47.37    49.52    49.55    49.63    50.98
+        9 comps  10 comps  11 comps  12 comps  13 comps  14 comps  15 comps
+X         96.55     97.61     98.28     98.85     99.22     99.53     99.79
+Salary    53.00     53.00     53.02     53.05     53.80     53.85     54.03
+        16 comps  17 comps  18 comps  19 comps
+X          99.91     99.97     99.99    100.00
+Salary     55.85     55.89     56.21     58.62</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb249"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb249-1"><a href="#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validationplot</span>(pcr.fit, <span class="at">val.type=</span><span class="st">"MSEP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Notes_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb250"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb250-1"><a href="#cb250-1" aria-hidden="true" tabindex="-1"></a>pcr.fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Principal component regression, fitted with the singular value decomposition algorithm.
+Cross-validated using 10 random segments.
+Call:
+pcr(formula = Salary ~ ., data = Hitters, subset = train, scale = TRUE,     validation = "CV")</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb252"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we find the lowest CV error when M=5</span></span>
+<span id="cb252-2"><a href="#cb252-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the test MSE with five components</span></span>
+<span id="cb252-3"><a href="#cb252-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary<span class="sc">~</span>., Hitters)[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb252-4"><a href="#cb252-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Hitters<span class="sc">$</span>Salary</span>
+<span id="cb252-5"><a href="#cb252-5" aria-hidden="true" tabindex="-1"></a>pcr.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(pcr.fit, x[test,], <span class="at">ncomp=</span><span class="dv">5</span>)</span>
+<span id="cb252-6"><a href="#cb252-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((pcr.pred<span class="sc">-</span>y[test])<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 142811.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb254"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb254-1"><a href="#cb254-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit PCR on the full data set with M=5</span></span>
+<span id="cb254-2"><a href="#cb254-2" aria-hidden="true" tabindex="-1"></a>pcr.fitall <span class="ot">&lt;-</span> <span class="fu">pcr</span>(Salary<span class="sc">~</span>., <span class="at">data=</span>Hitters, <span class="at">scale=</span><span class="cn">TRUE</span>, <span class="at">ncomp=</span><span class="dv">5</span>)</span>
+<span id="cb254-3"><a href="#cb254-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcr.fitall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 263 19 
+    Y dimension: 263 1
+Fit method: svdpc
+Number of components considered: 5
+TRAINING: % variance explained
+        1 comps  2 comps  3 comps  4 comps  5 comps
+X         38.31    60.16    70.84    79.03    84.29
+Salary    40.63    41.58    42.17    43.22    44.90</code></pre>
+</div>
+</div>
+</section>
+<section id="partial-least-squares-method" class="level4" data-number="4.2.3.4">
+<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="partial-least-squares-method"><span class="header-section-number">4.2.3.4</span> Partial Least Squares Method</h4>
+<p>(To review theory again) - Difference to PCR: - It identifies the new features in a supervised way: - Take each variable of <span class="math inline">\(X_1\)</span> to regress onto each point of <span class="math inline">\(Y_1\)</span>, to obtain the coefficient as <span class="math inline">\(\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...\)</span> - Afterwhich take the residuals of the regression and do it again against <span class="math inline">\(X_2\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb256"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb256-1"><a href="#cb256-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb256-2"><a href="#cb256-2" aria-hidden="true" tabindex="-1"></a>pls.fit <span class="ot">&lt;-</span> <span class="fu">plsr</span>(Salary<span class="sc">~</span>., <span class="at">data=</span>Hitters, <span class="at">subset=</span>train,</span>
+<span id="cb256-3"><a href="#cb256-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale=</span><span class="cn">TRUE</span>, <span class="at">validation=</span><span class="st">"CV"</span>) </span>
+<span id="cb256-4"><a href="#cb256-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pls.fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 131 19 
+    Y dimension: 131 1
+Fit method: kernelpls
+Number of components considered: 19
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+CV           428.3    325.5    329.9    328.8    339.0    338.9    340.1
+adjCV        428.3    325.0    328.2    327.2    336.6    336.1    336.6
+       7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps
+CV       339.0    347.1    346.4     343.4     341.5     345.4     356.4
+adjCV    336.2    343.4    342.8     340.2     338.3     341.8     351.1
+       14 comps  15 comps  16 comps  17 comps  18 comps  19 comps
+CV        348.4     349.1     350.0     344.2     344.5     345.0
+adjCV     344.2     345.0     345.9     340.4     340.6     341.1
+
+TRAINING: % variance explained
+        1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps
+X         39.13    48.80    60.09    75.07    78.58    81.12    88.21    90.71
+Salary    46.36    50.72    52.23    53.03    54.07    54.77    55.05    55.66
+        9 comps  10 comps  11 comps  12 comps  13 comps  14 comps  15 comps
+X         93.17     96.05     97.08     97.61     97.97     98.70     99.12
+Salary    55.95     56.12     56.47     56.68     57.37     57.76     58.08
+        16 comps  17 comps  18 comps  19 comps
+X          99.61     99.70     99.95    100.00
+Salary     58.17     58.49     58.56     58.62</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb258"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb258-1"><a href="#cb258-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validationplot</span>(pls.fit, <span class="at">val.type=</span><span class="st">"MSEP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Notes_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb259"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb259-1"><a href="#cb259-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we find the lowest CV error when M=1</span></span>
+<span id="cb259-2"><a href="#cb259-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the test MSE</span></span>
+<span id="cb259-3"><a href="#cb259-3" aria-hidden="true" tabindex="-1"></a>pls.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(pls.fit, x[test,], <span class="at">ncomp=</span><span class="dv">1</span>)</span>
+<span id="cb259-4"><a href="#cb259-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((pls.pred<span class="sc">-</span>y[test])<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 151995.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb261"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb261-1"><a href="#cb261-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit PLS on the full data set with M=1</span></span>
+<span id="cb261-2"><a href="#cb261-2" aria-hidden="true" tabindex="-1"></a>pls.fitall <span class="ot">&lt;-</span> <span class="fu">plsr</span>(Salary<span class="sc">~</span>., <span class="at">data=</span>Hitters, <span class="at">scale=</span><span class="cn">TRUE</span>, <span class="at">ncomp=</span><span class="dv">1</span>)</span>
+<span id="cb261-3"><a href="#cb261-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pls.fitall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data:   X dimension: 263 19 
+    Y dimension: 263 1
+Fit method: kernelpls
+Number of components considered: 1
+TRAINING: % variance explained
+        1 comps
+X         38.08
+Salary    43.05</code></pre>
+</div>
+</div>
+</section>
 </section>
 </section>
 </section>

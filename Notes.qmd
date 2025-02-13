@@ -826,7 +826,10 @@ cutree(gga, 3)
 # Lesson 4: Multiple Linear Regression
 
 ## Basic theory of Regression Model
-
+-   Interpretation of coefficient
+-   Qualitative Variables 
+-   Interaction variables
+-   Non-linear effects
 -   (Copy over from Stat learning)
 
 ## Dimension Reduction
@@ -840,6 +843,112 @@ cutree(gga, 3)
 -   (Copy over from Stat learning)
 
 ### PCR regression
+
+#### Theory
+-   PCR perform better: Lower variance but higher bias (When $M<p$)
+-   When $M=p$ and no dimension reduction occurs, results are the same as OLS method.
+
+
+#### Example 1
+
+Used when there are correlated predictors in the model:
+
+The code below does PCA and the regression separately
+```{r}
+library(pls)
+blood <- read.csv("Datasets/BPressure.csv", stringsAsFactors = TRUE)
+cor(blood)
+reg.re <- lm(BP~., data=blood)
+summary(reg.re)
+predict(reg.re, blood)
+pr.out <- prcomp(blood[,-1], scale=TRUE) # Removing the BP column
+summary(pr.out)
+pr.out$x
+pr.out$rotation
+lmpr <- lm(blood$BP~pr.out$x[,1]) # Using only the first principle component 
+summary(lmpr)               
+```
+The code below uses a predefined function for PCR.
+```{r}
+pcr.re1 <- pcr(BP~., data=blood, scale=TRUE, ncomp=1)
+summary(pcr.re1)
+pcr.re1$fitted.values
+newx1 <- pcr.re1$scores # Obtains the principal component score
+newx1
+newreg1 <- lm(blood$BP ~ newx1)
+summary(newreg1)
+
+# If you use M=p, then you go back to the original OLS method.
+pcr.re2 <- pcr(BP~., data=blood, scale=TRUE, ncomp=2)
+summary(pcr.re2)
+pcr.re2$fitted.values
+newx2 <- pcr.re2$scores
+newx2
+newreg2 <- lm(blood$BP ~ newx2)
+summary(newreg2)
+```
+
+#### Example 1
+```{r}
+library(ISLR2)
+library(pls)
+names(Hitters)
+dim(Hitters)
+sum(is.na(Hitters$Salary))
+Hitters <- na.omit(Hitters)
+dim(Hitters)
+
+# splitting train and test set
+set.seed(1)
+train <- sample(1:nrow(Hitters), nrow(Hitters)/2)
+test <- (-train)
+
+# run PCR on the training data with Cross Validation
+set.seed(1)
+pcr.fit <- pcr(Salary~., 
+               data=Hitters, 
+               subset=train,
+               scale=TRUE, 
+               validation="CV") # By default, it uses 10 fold validation.
+summary(pcr.fit)
+validationplot(pcr.fit, val.type="MSEP")
+pcr.fit
+
+# we find the lowest CV error when M=5
+# Calculate the test MSE with five components
+x <- model.matrix(Salary~., Hitters)[,-1]
+y <- Hitters$Salary
+pcr.pred <- predict(pcr.fit, x[test,], ncomp=5)
+mean((pcr.pred-y[test])^2)
+
+# fit PCR on the full data set with M=5
+pcr.fitall <- pcr(Salary~., data=Hitters, scale=TRUE, ncomp=5)
+summary(pcr.fitall)
+```
+#### Partial Least Squares Method
+(To review theory again)
+-   Difference to PCR:
+    -    It identifies the new features in a supervised way:
+        -   Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$
+        -   Afterwhich take the residuals of the regression and do it again against $X_2$
+        
+```{r}
+set.seed(1)
+pls.fit <- plsr(Salary~., data=Hitters, subset=train,
+                scale=TRUE, validation="CV") 
+summary(pls.fit)
+validationplot(pls.fit, val.type="MSEP")
+# we find the lowest CV error when M=1
+# Calculate the test MSE
+pls.pred <- predict(pls.fit, x[test,], ncomp=1)
+mean((pls.pred-y[test])^2)
+
+# fit PLS on the full data set with M=1
+pls.fitall <- plsr(Salary~., data=Hitters, scale=TRUE, ncomp=1)
+summary(pls.fitall)
+```
+
+
 
 # Lesson 5: Classification
 
