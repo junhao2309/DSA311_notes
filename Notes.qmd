@@ -826,8 +826,9 @@ cutree(gga, 3)
 # Lesson 4: Multiple Linear Regression
 
 ## Basic theory of Regression Model
+
 -   Interpretation of coefficient
--   Qualitative Variables 
+-   Qualitative Variables
 -   Interaction variables
 -   Non-linear effects
 -   (Copy over from Stat learning)
@@ -845,15 +846,16 @@ cutree(gga, 3)
 ### PCR regression
 
 #### Theory
+
 -   PCR perform better: Lower variance but higher bias (When $M<p$)
 -   When $M=p$ and no dimension reduction occurs, results are the same as OLS method.
-
 
 #### Example 1
 
 Used when there are correlated predictors in the model:
 
 The code below does PCA and the regression separately
+
 ```{r}
 library(pls)
 blood <- read.csv("Datasets/BPressure.csv", stringsAsFactors = TRUE)
@@ -868,7 +870,9 @@ pr.out$rotation
 lmpr <- lm(blood$BP~pr.out$x[,1]) # Using only the first principle component 
 summary(lmpr)               
 ```
+
 The code below uses a predefined function for PCR.
+
 ```{r}
 pcr.re1 <- pcr(BP~., data=blood, scale=TRUE, ncomp=1)
 summary(pcr.re1)
@@ -889,6 +893,7 @@ summary(newreg2)
 ```
 
 #### Example 1
+
 ```{r}
 library(ISLR2)
 library(pls)
@@ -925,13 +930,11 @@ mean((pcr.pred-y[test])^2)
 pcr.fitall <- pcr(Salary~., data=Hitters, scale=TRUE, ncomp=5)
 summary(pcr.fitall)
 ```
+
 #### Partial Least Squares Method
-(To review theory again)
--   Difference to PCR:
-    -    It identifies the new features in a supervised way:
-        -   Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$
-        -   Afterwhich take the residuals of the regression and do it again against $X_2$
-        
+
+(To review theory again) - Difference to PCR: - It identifies the new features in a supervised way: - Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$ - Afterwhich take the residuals of the regression and do it again against $X_2$
+
 ```{r}
 set.seed(1)
 pls.fit <- plsr(Salary~., data=Hitters, subset=train,
@@ -948,20 +951,349 @@ pls.fitall <- plsr(Salary~., data=Hitters, scale=TRUE, ncomp=1)
 summary(pls.fitall)
 ```
 
-
-
 # Lesson 5: Classification
 
 ## Multinomial Logistic Regression
 
 -   Theory to take from python notes
 
-## Discriminant Analysis
+![](images/Lesson5_img1.png)
+## Linear and Quadratic Discriminant Analysis
 
 ### Theory (Bayes Theorem)
+Base on three metrics:
+$\mu_1 , \mu_2 , \mu_3$ and $\sum_i $
+
+For each value of $Y$, we take the mean,$\mu_i$ of the $X$ features and its $\sum_i$
+
+-   Manual mathematical calculation
+```{r}
+mlr <- read.csv("Datasets/MLR.csv", stringsAsFactors = TRUE)
+library(nnet)
+library(broom)
+summary(mlr)
+fit.mlr <- multinom(Y~., data=mlr)
+summary(fit.mlr)
+tidy(fit.mlr, conf.int = TRUE)
+round(fit.mlr$fitted.values,3)
+model <- predict(fit.mlr, mlr)
+model
+mlr$Y
+table(model, mlr$Y)
+# calculate the predicted prob for 5th obs.
+bbcoef <- c(-6.733, 0.2555, -1.052, 1.1302)
+cccoef <- c(-1.218, 0.1759, -0.6155, 0.3546)
+fifthobs <- c(1, 28, 6, 7)
+den <- 1+exp(sum(bbcoef*fifthobs))+exp(sum(cccoef*fifthobs))
+proaa <- 1/den
+probb <- exp(sum(bbcoef*fifthobs))/den
+procc <- exp(sum(cccoef*fifthobs))/den
+proaa
+probb
+procc
+```
+
+```{r, eval = FALSE}
+library(ISLR2)
+library(MASS) 
+View(Smarket)
+summary(Smarket)
+dim(Smarket)
+train <- (Smarket$Year <2005)
+SMtrain <- Smarket[train,]
+SMtest <- Smarket[!train,]
+dim(SMtest)
+y.test <- SMtest$Direction
+lda.fit <- lda(Direction ~Lag1 +Lag2, data=Smarket, subset=train)
+lda.fit
+plot(lda.fit)
+# verify the computer outputs
+up <- SMtrain$Direction=="Up"
+probup <- length(SMtrain$Direction[up])/length(SMtrain$Direction)
+probup
+mean(SMtrain$Lag1[!up])
+mean(SMtrain$Lag1[up])
+mean(SMtrain$Lag2[!up])
+mean(SMtrain$Lag2[up])
+lda.pred <- predict(lda.fit, SMtest)
+lda.class <- lda.pred$class
+table(lda.class, y.test)
+lda.pred$posterior
+#run the QDA
+qda.fit <- qda(Direction ~Lag1 +Lag2, data=Smarket, subset=train)
+qda.fit
+qda.pred <- predict(qda.fit, SMtest)
+qda.class <- qda.pred$class
+table(qda.class, y.test)
+qda.pred$posterior 
+```
 
 ### Linear Discriminant Analysis (LDA)
 
 ### Quadratic Discriminant Analysis (QDA)
 
 # Lesson 6: Support Vector Machines
+
+A hyperplane has the form:
+$$
+\beta_0+\beta_1X_1+\beta_2X_2 +... +\beta_pX_p=0
+$$
+-   Has a subspace of dimension $p-1$ where $p$ is the number of features
+
+![](images/Lesson5_img2.png)
+The above graph showcases a one dimensional plane. A vertical line (hyperplane) can be drawn to separate the blue and red dots.     
+
+-   Ideally the distance from the blue dot to the line and the distance from the red dot to the line should be approximately equal. (See topic on margin)
+
+![](images/Lesson5_img3.png)
+Example:
+The hyperplane separates the points:
+-   For the blue line, any point on the right is positive while any point on the left is negative
+$$
+-6+0.8X_1+0.6X_2=0
+$$
+Looking at Points (7,4) and (2,5),
+Sub in the points into the above equation
+
+```{r}
+-6+0.8*(7)+0.6*4 # Positive
+-6+0.8*(2)+0.6*5 # negative
+```
+
+## Separating Hyperplane
+Insert slide 6 of Note 6
+
+Ensure that all purple points are more than 0. Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two $Y$ observations.
+
+## Margin
+
+-   Denoted as $M$
+    -   Distance from the observation to the hyperplane is known as Margin
+    
+## Maximal Margin Classifier
+-   Maximise the margin (biggest gap) between the two classes
+
+Insert slide 8
+
+The points that results in a distance within the margin is not that important.
+
+## Support Vector classifier
+More often, data points generally do not allow for a clean separation. This is where we use support vector classifier that maximises a soft margin.
+
+Insert Slide 11:
+- This allows for some misclassification that maximises the margin.
+- If a hard margin is wanted, one will have to sacrifise for a smaller margin.
+
+Insert slide 12
+
+Point 1 is called the incorrect side of the margin as it passed the margin line.
+
+Point 11 is called the incorrect side of the hyperplane.
+
+
+Insert slide 13:
+
+The parameter $C$ controls for the severity of the classication/margin errors.
+
+
+Insert Slide 14:
+
+From the graph above:
+$\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10
+$0<\epsilon_i<1$: 1, 8
+$\epsilon_i>1$: 11, 12
+
+Support vectors are: 2, 7, 9
+
+Insert Slide 16:
+
+Why variance is reduced when C is bigger?
+Since the margin is much wider, this means more observations becomes the support vector. If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.
+
+## Coding
+The key is to maximise $M$ subject to $\sum^{p}_{j=1} \beta_j^2=1$
+
+However, in SVM in R, it only takes in the 
+"cost" argument.
+
+-   A larger cost parameter $\rightarrow$ Low Budget C
+    -   Narrower margin
+    -   Fewer support vector
+    -   Lower bias and higher variance
+
+-   A smaller cost parameter $\rightarrow$ High Budget C
+    -   Larger margin
+    -   More support vector
+    -   Higher bias and lower variance
+
+### Numeric Example 1:
+
+#### Simulation of data and basic logistic regression
+
+```{r}
+#Support Vector Classifier example
+# numerical example 1
+
+# Simulation of Data
+y <- c(rep("aa", 5), rep("bb", 7))
+x1<- c(2,1,7,6,4,6,3,5,8,6,5,9)
+x2 <-c(5,3,4,1,2,8,4,9,2,6,7,3)
+ss<- c(rep(1,5), rep(2,7))
+plot(x2,x1, col=ss+1, cex=1.5)
+dd3 <- data.frame(y, x1, x2, stringsAsFactors = TRUE)
+
+# Simple logistics regression
+log1 <- glm(y~x1+x2, data=dd3, family=binomial)
+log1
+predict(log1, data=dd3, type="response")
+gg <- rep("predict aa", 12)
+gg[log1$fitted.values>0.5] <- "Predicted bb"
+table(gg, y)
+gg
+```
+
+#### SVM with cost= 0.10
+
+```{r}
+library(e1071)
+svm1 <- svm(y~x1+x2, data=dd3, kernel="linear", cost=.1, scale=FALSE)
+plot(svm1,dd3)
+svm1
+svm1$index
+svm1$fitted
+```
+#### SVM with cost= 10
+```{r}
+svm2 <- svm(y~x1+x2, data=dd3, kernel="linear", cost=10, scale=FALSE)
+plot(svm2,dd3)
+svm2
+svm2$index
+svm2$fitted
+```
+### Classification with Non-Linear Decision Boundaries
+
+Purpose: To address **non-linearity** in the model
+-   Enlarge Features with Polynomial Functions
+    -   Enlarge the feature space by including quadratic/cubic polynomials.
+    
+-   Inner Product:
+    Takes the sum of point coordinates
+$$
+(x_i, x_i')=\sum^{p}_{i=1} x_{ij}x_{i'j}
+$$
+For example:
+$X_1: 4, 7, 6, 9$
+$X_2: 2, 5, 4, 6$
+
+$(x_i, x_i')= 4\times2+7\times5+6\times4+9\times6$
+
+$$
+f(x)=\beta_0 +\sum^{n}_{i=1} \alpha_i(x,x_i)
+$$
+Most $\alpha$s can be zero as the observation that are away from the separation line do not contribute much to the parameters.
+
+-   Linear Kernel
+
+### Numeric Example 2:
+```{r}
+# numerical example 2:
+library(e1071)
+set.seed(1)
+x <- matrix(rnorm(20*2), ncol=2)
+y <- c(rep(-1, 10), rep(1, 10))
+x[y == 1,] <- x[y ==1, ]+1
+plot(x[,2], x[,1], col=3-y)
+dat <- data.frame(x=x, y=as.factor(y))
+svmfit <- svm(y ~ ., data =dat, kernel="linear", cost =10, scale=FALSE)
+plot(svmfit, dat)
+svmfit$fitted
+svmfit$index
+summary(svmfit)
+table(svmfit$fitted, y)
+
+svmfit1 <- svm(y ~ ., data =dat, kernel="linear", cost =0.1, scale=FALSE)
+plot(svmfit1, dat)
+svmfit$fitted
+svmfit1$index
+summary(svmfit1)
+table(svmfit1$fitted, y)
+
+set.seed(1)
+tune.out <- tune(svm, y~., data=dat, kernel="linear", 
+                 ranges=list(cost=c(0.001, 0.01, 0.1, 1, 5, 10, 100)))
+summary(tune.out)
+bestmod <- tune.out$best.model
+
+
+set.seed(1)
+xtest <- matrix(rnorm(20*2), ncol=2)
+ytest <- sample(c(-1, 1), 20 , rep=TRUE)
+xtest[ytest==1, ] <- xtest[ytest==1,]+1
+testdat <- data.frame(x=xtest, y=as.factor(ytest))
+ypred <- predict(bestmod, testdat)
+table(predict=ypred, truth=testdat$y)
+```
+
+Example 3:
+```{r}
+# Support Vector Machine
+# numerical example 3: radial kernel
+set.seed(1)
+x <- matrix(rnorm(200*2), ncol=2)
+x[1:100,] <- x[1:100, ]+2
+x[101:150, ] <- x[101:150,]-2
+y <- c(rep(1, 150), rep(2, 50))
+dat <- data.frame(x=x, y=as.factor(y))
+plot(x[,2], x[,1], col=y)
+
+train <- sample(200, 100)
+svmfit3 <- svm(y~., data=dat[train,], kernel="radial",
+               gamma=1, cost=1)
+plot(svmfit3, dat[train,])
+#perform the cross-validation to select gamma and cost
+tune.out <- tune(svm, y~., data=dat[train,],
+                 kernel ="radial",
+                 ranges=list(
+                   cost=c(0.1,1,10,100, 1000),
+                   gamma=c(0.5, 1, 2, 3, 4)))
+summary(tune.out)
+tune.out$best.parameters
+bestmod1 <- tune.out$best.model
+pred1 <- predict(bestmod1, newdata=dat[-train,])
+table(true=dat[-train, "y"], pred1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
