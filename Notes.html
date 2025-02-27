@@ -168,9 +168,27 @@ window.Quarto = {
   <li><a href="#margin" id="toc-margin" class="nav-link" data-scroll-target="#margin"><span class="header-section-number">6.2</span> Margin</a></li>
   <li><a href="#maximal-margin-classifier" id="toc-maximal-margin-classifier" class="nav-link" data-scroll-target="#maximal-margin-classifier"><span class="header-section-number">6.3</span> Maximal Margin Classifier</a></li>
   <li><a href="#support-vector-classifier" id="toc-support-vector-classifier" class="nav-link" data-scroll-target="#support-vector-classifier"><span class="header-section-number">6.4</span> Support Vector classifier</a></li>
-  <li><a href="#coding-1" id="toc-coding-1" class="nav-link" data-scroll-target="#coding-1"><span class="header-section-number">6.5</span> Coding</a>
+  <li><a href="#numeric-example-1" id="toc-numeric-example-1" class="nav-link" data-scroll-target="#numeric-example-1"><span class="header-section-number">6.5</span> Numeric Example 1:</a>
   <ul class="collapse">
-  <li><a href="#numeric-example" id="toc-numeric-example" class="nav-link" data-scroll-target="#numeric-example"><span class="header-section-number">6.5.1</span> Numeric Example:</a></li>
+  <li><a href="#simulation-of-data-and-basic-logistic-regression" id="toc-simulation-of-data-and-basic-logistic-regression" class="nav-link" data-scroll-target="#simulation-of-data-and-basic-logistic-regression"><span class="header-section-number">6.5.1</span> Simulation of data and basic logistic regression</a></li>
+  <li><a href="#svm-with-cost-0.10" id="toc-svm-with-cost-0.10" class="nav-link" data-scroll-target="#svm-with-cost-0.10"><span class="header-section-number">6.5.2</span> SVM with cost= 0.10</a></li>
+  <li><a href="#svm-with-cost-10" id="toc-svm-with-cost-10" class="nav-link" data-scroll-target="#svm-with-cost-10"><span class="header-section-number">6.5.3</span> SVM with cost= 10</a></li>
+  </ul></li>
+  <li><a href="#classification-with-non-linear-decision-boundaries-numeric-example-2" id="toc-classification-with-non-linear-decision-boundaries-numeric-example-2" class="nav-link" data-scroll-target="#classification-with-non-linear-decision-boundaries-numeric-example-2"><span class="header-section-number">6.6</span> Classification with Non-Linear Decision Boundaries (Numeric Example 2)</a></li>
+  <li><a href="#numeric-example-2" id="toc-numeric-example-2" class="nav-link" data-scroll-target="#numeric-example-2"><span class="header-section-number">6.7</span> Numeric Example 2:</a>
+  <ul class="collapse">
+  <li><a href="#simulation-of-data" id="toc-simulation-of-data" class="nav-link" data-scroll-target="#simulation-of-data"><span class="header-section-number">6.7.1</span> Simulation of data</a></li>
+  <li><a href="#svm-with-cost-10-1" id="toc-svm-with-cost-10-1" class="nav-link" data-scroll-target="#svm-with-cost-10-1"><span class="header-section-number">6.7.2</span> SVM with cost 10</a></li>
+  <li><a href="#svm-with-cost-0.1" id="toc-svm-with-cost-0.1" class="nav-link" data-scroll-target="#svm-with-cost-0.1"><span class="header-section-number">6.7.3</span> SVM with cost 0.1</a></li>
+  <li><a href="#tuning-cross-validation" id="toc-tuning-cross-validation" class="nav-link" data-scroll-target="#tuning-cross-validation"><span class="header-section-number">6.7.4</span> Tuning (Cross validation)</a></li>
+  </ul></li>
+  <li><a href="#polynomial-kernel" id="toc-polynomial-kernel" class="nav-link" data-scroll-target="#polynomial-kernel"><span class="header-section-number">6.8</span> Polynomial Kernel</a></li>
+  <li><a href="#radial-kernel" id="toc-radial-kernel" class="nav-link" data-scroll-target="#radial-kernel"><span class="header-section-number">6.9</span> Radial Kernel</a></li>
+  <li><a href="#numeric-example-3" id="toc-numeric-example-3" class="nav-link" data-scroll-target="#numeric-example-3"><span class="header-section-number">6.10</span> Numeric Example 3:</a>
+  <ul class="collapse">
+  <li><a href="#simulation-of-data-1" id="toc-simulation-of-data-1" class="nav-link" data-scroll-target="#simulation-of-data-1"><span class="header-section-number">6.10.1</span> Simulation of data</a></li>
+  <li><a href="#train-test-split" id="toc-train-test-split" class="nav-link" data-scroll-target="#train-test-split"><span class="header-section-number">6.10.2</span> Train-test split</a></li>
+  <li><a href="#perform-cv-to-select-gamma-and-cost" id="toc-perform-cv-to-select-gamma-and-cost" class="nav-link" data-scroll-target="#perform-cv-to-select-gamma-and-cost"><span class="header-section-number">6.10.3</span> Perform CV to select <span class="math inline">\(\gamma\)</span> and cost</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -2420,9 +2438,7 @@ model aa bb cc
 <p>Support vectors are: 2, 7, 9</p>
 <p>Insert Slide 16:</p>
 <p>Why variance is reduced when C is bigger? Since the margin is much wider, this means more observations becomes the support vector. If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.</p>
-</section>
-<section id="coding-1" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="coding-1"><span class="header-section-number">6.5</span> Coding</h2>
+<p><strong>CODING FOR SVM</strong></p>
 <p>The key is to maximise <span class="math inline">\(M\)</span> subject to <span class="math inline">\(\sum^{p}_{j=1} \beta_j^2=1\)</span></p>
 <p>However, in SVM in R, it only takes in the “cost” argument.</p>
 <ul>
@@ -2439,18 +2455,21 @@ model aa bb cc
 <li>Higher bias and lower variance</li>
 </ul></li>
 </ul>
-<section id="numeric-example" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="numeric-example"><span class="header-section-number">6.5.1</span> Numeric Example:</h3>
-<p>Example 1:</p>
+</section>
+<section id="numeric-example-1" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="numeric-example-1"><span class="header-section-number">6.5</span> Numeric Example 1:</h2>
+<section id="simulation-of-data-and-basic-logistic-regression" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="simulation-of-data-and-basic-logistic-regression"><span class="header-section-number">6.5.1</span> Simulation of data and basic logistic regression</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb290"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb290-1"><a href="#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Support Vector Classifier example</span></span>
 <span id="cb290-2"><a href="#cb290-2" aria-hidden="true" tabindex="-1"></a><span class="co"># numerical example 1</span></span>
 <span id="cb290-3"><a href="#cb290-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb290-4"><a href="#cb290-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"aa"</span>, <span class="dv">5</span>), <span class="fu">rep</span>(<span class="st">"bb"</span>, <span class="dv">7</span>))</span>
-<span id="cb290-5"><a href="#cb290-5" aria-hidden="true" tabindex="-1"></a>x1<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">9</span>)</span>
-<span id="cb290-6"><a href="#cb290-6" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">3</span>)</span>
-<span id="cb290-7"><a href="#cb290-7" aria-hidden="true" tabindex="-1"></a>ss<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">7</span>))</span>
-<span id="cb290-8"><a href="#cb290-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x2,x1, <span class="at">col=</span>ss<span class="sc">+</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb290-4"><a href="#cb290-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation of Data</span></span>
+<span id="cb290-5"><a href="#cb290-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"aa"</span>, <span class="dv">5</span>), <span class="fu">rep</span>(<span class="st">"bb"</span>, <span class="dv">7</span>))</span>
+<span id="cb290-6"><a href="#cb290-6" aria-hidden="true" tabindex="-1"></a>x1<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">9</span>)</span>
+<span id="cb290-7"><a href="#cb290-7" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">3</span>)</span>
+<span id="cb290-8"><a href="#cb290-8" aria-hidden="true" tabindex="-1"></a>ss<span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">7</span>))</span>
+<span id="cb290-9"><a href="#cb290-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x2,x1, <span class="at">col=</span>ss<span class="sc">+</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2459,8 +2478,10 @@ model aa bb cc
 </div>
 </div>
 <div class="sourceCode cell-code" id="cb291"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb291-1"><a href="#cb291-1" aria-hidden="true" tabindex="-1"></a>dd3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb291-2"><a href="#cb291-2" aria-hidden="true" tabindex="-1"></a>log1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data=</span>dd3, <span class="at">family=</span>binomial)</span>
-<span id="cb291-3"><a href="#cb291-3" aria-hidden="true" tabindex="-1"></a>log1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb291-2"><a href="#cb291-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-3"><a href="#cb291-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple logistics regression</span></span>
+<span id="cb291-4"><a href="#cb291-4" aria-hidden="true" tabindex="-1"></a>log1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data=</span>dd3, <span class="at">family=</span>binomial)</span>
+<span id="cb291-5"><a href="#cb291-5" aria-hidden="true" tabindex="-1"></a>log1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:  glm(formula = y ~ x1 + x2, family = binomial, data = dd3)
@@ -2495,13 +2516,18 @@ gg             aa bb
  [6] "Predicted bb" "predict aa"   "Predicted bb" "Predicted bb" "Predicted bb"
 [11] "Predicted bb" "Predicted bb"</code></pre>
 </div>
+</div>
+</section>
+<section id="svm-with-cost-0.10" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="svm-with-cost-0.10"><span class="header-section-number">6.5.2</span> SVM with cost= 0.10</h3>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb299"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb299-1"><a href="#cb299-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
 <span id="cb299-2"><a href="#cb299-2" aria-hidden="true" tabindex="-1"></a>svm1 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data=</span>dd3, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost=</span>.<span class="dv">1</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
 <span id="cb299-3"><a href="#cb299-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm1,dd3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2530,12 +2556,17 @@ Number of Support Vectors:  9</code></pre>
 aa aa bb aa aa bb aa bb bb bb bb bb 
 Levels: aa bb</code></pre>
 </div>
+</div>
+</section>
+<section id="svm-with-cost-10" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="svm-with-cost-10"><span class="header-section-number">6.5.3</span> SVM with cost= 10</h3>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb306"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb306-1"><a href="#cb306-1" aria-hidden="true" tabindex="-1"></a>svm2 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data=</span>dd3, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost=</span><span class="dv">10</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
 <span id="cb306-2"><a href="#cb306-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm2,dd3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-33-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2565,7 +2596,31 @@ aa aa bb aa aa bb aa bb bb bb bb bb
 Levels: aa bb</code></pre>
 </div>
 </div>
-<p>Example 2:</p>
+</section>
+</section>
+<section id="classification-with-non-linear-decision-boundaries-numeric-example-2" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="classification-with-non-linear-decision-boundaries-numeric-example-2"><span class="header-section-number">6.6</span> Classification with Non-Linear Decision Boundaries (Numeric Example 2)</h2>
+<p>Purpose: To address <strong>non-linearity</strong> in the model - Enlarge Features with Polynomial Functions - Enlarge the feature space by including quadratic/cubic polynomials.</p>
+<ul>
+<li>Inner Product: Takes the sum of point coordinates <span class="math display">\[
+(x_i, x_i')=\sum^{p}_{i=1} x_{ij}x_{i'j}
+\]</span> For example: <span class="math inline">\(X_1: 4, 7, 6, 9\)</span> <span class="math inline">\(X_2: 2, 5, 4, 6\)</span></li>
+</ul>
+<p><span class="math inline">\((x_i, x_i')= 4\times2+7\times5+6\times4+9\times6\)</span></p>
+<p><span class="math display">\[
+f(x)=\beta_0 +\sum^{n}_{i=1} \alpha_i(x,x_i)
+\]</span> Most <span class="math inline">\(\alpha\)</span>s can be zero as the observation that are away from the separation line do not contribute much to the parameters.</p>
+<ul>
+<li>Linear Kernel
+<ul>
+<li>Quantifies the similarity of the two observations</li>
+</ul></li>
+</ul>
+</section>
+<section id="numeric-example-2" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="numeric-example-2"><span class="header-section-number">6.7</span> Numeric Example 2:</h2>
+<section id="simulation-of-data" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="simulation-of-data"><span class="header-section-number">6.7.1</span> Simulation of data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb313"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb313-1"><a href="#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numerical example 2:</span></span>
 <span id="cb313-2"><a href="#cb313-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
@@ -2577,31 +2632,60 @@ Levels: aa bb</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="sourceCode cell-code" id="cb314"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb314-1"><a href="#cb314-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x, <span class="at">y=</span><span class="fu">as.factor</span>(y))</span>
-<span id="cb314-2"><a href="#cb314-2" aria-hidden="true" tabindex="-1"></a>svmfit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., <span class="at">data =</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost =</span><span class="dv">10</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
-<span id="cb314-3"><a href="#cb314-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit, dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb314-2"><a href="#cb314-2" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          x.1         x.2  y
+1  -0.6264538  0.91897737 -1
+2   0.1836433  0.78213630 -1
+3  -0.8356286  0.07456498 -1
+4   1.5952808 -1.98935170 -1
+5   0.3295078  0.61982575 -1
+6  -0.8204684 -0.05612874 -1
+7   0.4874291 -0.15579551 -1
+8   0.7383247 -1.47075238 -1
+9   0.5757814 -0.47815006 -1
+10 -0.3053884  0.41794156 -1
+11  2.5117812  2.35867955  1
+12  1.3898432  0.89721227  1
+13  0.3787594  1.38767161  1
+14 -1.2146999  0.94619496  1
+15  2.1249309 -0.37705956  1
+16  0.9550664  0.58500544  1
+17  0.9838097  0.60571005  1
+18  1.9438362  0.94068660  1
+19  1.8212212  2.10002537  1
+20  1.5939013  1.76317575  1</code></pre>
+</div>
+</div>
+</section>
+<section id="svm-with-cost-10-1" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="svm-with-cost-10-1"><span class="header-section-number">6.7.2</span> SVM with cost 10</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb316"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb316-1"><a href="#cb316-1" aria-hidden="true" tabindex="-1"></a>svmfit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., <span class="at">data =</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost =</span><span class="dv">10</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
+<span id="cb316-2"><a href="#cb316-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit, dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb315"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb315-1"><a href="#cb315-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>fitted</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb317"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb317-1"><a href="#cb317-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>fitted <span class="co"># Shows how SVM classifies the points</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
 -1  1 -1 -1  1 -1 -1 -1 -1 -1  1  1  1 -1  1  1  1  1  1  1 
 Levels: -1 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb317"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb317-1"><a href="#cb317-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb319"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb319-1"><a href="#cb319-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  1  2  5  7 14 16 17</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb319"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb319-1"><a href="#cb319-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svmfit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb321"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb321-1"><a href="#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svmfit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2623,33 +2707,38 @@ Number of Classes:  2
 Levels: 
  -1 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb321"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb321-1"><a href="#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(svmfit<span class="sc">$</span>fitted, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb323"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb323-1"><a href="#cb323-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(svmfit<span class="sc">$</span>fitted, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    y
      -1 1
   -1  8 1
   1   2 9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb323"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb323-1"><a href="#cb323-1" aria-hidden="true" tabindex="-1"></a>svmfit1 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., <span class="at">data =</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost =</span><span class="fl">0.1</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
-<span id="cb323-2"><a href="#cb323-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit1, dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="svm-with-cost-0.1" class="level3" data-number="6.7.3">
+<h3 data-number="6.7.3" class="anchored" data-anchor-id="svm-with-cost-0.1"><span class="header-section-number">6.7.3</span> SVM with cost 0.1</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb325"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb325-1"><a href="#cb325-1" aria-hidden="true" tabindex="-1"></a>svmfit1 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., <span class="at">data =</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, <span class="at">cost =</span><span class="fl">0.1</span>, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
+<span id="cb325-2"><a href="#cb325-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit1, dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-34-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb324"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb324-1"><a href="#cb324-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>fitted</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb326"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb326-1"><a href="#cb326-1" aria-hidden="true" tabindex="-1"></a>svmfit<span class="sc">$</span>fitted <span class="co"># Shows how SVM classifies the points</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
 -1  1 -1 -1  1 -1 -1 -1 -1 -1  1  1  1 -1  1  1  1  1  1  1 
 Levels: -1 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb326"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb326-1"><a href="#cb326-1" aria-hidden="true" tabindex="-1"></a>svmfit1<span class="sc">$</span>index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb328"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb328-1"><a href="#cb328-1" aria-hidden="true" tabindex="-1"></a>svmfit1<span class="sc">$</span>index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  1  2  3  4  5  7  9 10 12 13 14 15 16 17 18 20</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb328"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb328-1"><a href="#cb328-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svmfit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb330"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb330-1"><a href="#cb330-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svmfit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2671,17 +2760,22 @@ Number of Classes:  2
 Levels: 
  -1 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb330"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb330-1"><a href="#cb330-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(svmfit1<span class="sc">$</span>fitted, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb332"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb332-1"><a href="#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(svmfit1<span class="sc">$</span>fitted, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    y
      -1  1
   -1 10  1
   1   0  9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb332"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb332-1"><a href="#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb332-2"><a href="#cb332-2" aria-hidden="true" tabindex="-1"></a>tune.out <span class="ot">&lt;-</span> <span class="fu">tune</span>(svm, y<span class="sc">~</span>., <span class="at">data=</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, </span>
-<span id="cb332-3"><a href="#cb332-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ranges=</span><span class="fu">list</span>(<span class="at">cost=</span><span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">100</span>)))</span>
-<span id="cb332-4"><a href="#cb332-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tune.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tuning-cross-validation" class="level3" data-number="6.7.4">
+<h3 data-number="6.7.4" class="anchored" data-anchor-id="tuning-cross-validation"><span class="header-section-number">6.7.4</span> Tuning (Cross validation)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb334"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb334-1"><a href="#cb334-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb334-2"><a href="#cb334-2" aria-hidden="true" tabindex="-1"></a>tune.out <span class="ot">&lt;-</span> <span class="fu">tune</span>(svm, y<span class="sc">~</span>., <span class="at">data=</span>dat, <span class="at">kernel=</span><span class="st">"linear"</span>, </span>
+<span id="cb334-3"><a href="#cb334-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ranges=</span><span class="fu">list</span>(<span class="at">cost=</span><span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">100</span>))) <span class="co"># Testing a range of cost</span></span>
+<span id="cb334-4"><a href="#cb334-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tune.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Parameter tuning of 'svm':
@@ -2704,16 +2798,16 @@ Parameter tuning of 'svm':
 6 1e+01  0.15  0.2415229
 7 1e+02  0.15  0.2415229</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb334"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb334-1"><a href="#cb334-1" aria-hidden="true" tabindex="-1"></a>bestmod <span class="ot">&lt;-</span> tune.out<span class="sc">$</span>best.model</span>
-<span id="cb334-2"><a href="#cb334-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb334-3"><a href="#cb334-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb334-4"><a href="#cb334-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb334-5"><a href="#cb334-5" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">20</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
-<span id="cb334-6"><a href="#cb334-6" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">20</span> , <span class="at">rep=</span><span class="cn">TRUE</span>)</span>
-<span id="cb334-7"><a href="#cb334-7" aria-hidden="true" tabindex="-1"></a>xtest[ytest<span class="sc">==</span><span class="dv">1</span>, ] <span class="ot">&lt;-</span> xtest[ytest<span class="sc">==</span><span class="dv">1</span>,]<span class="sc">+</span><span class="dv">1</span></span>
-<span id="cb334-8"><a href="#cb334-8" aria-hidden="true" tabindex="-1"></a>testdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>xtest, <span class="at">y=</span><span class="fu">as.factor</span>(ytest))</span>
-<span id="cb334-9"><a href="#cb334-9" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">predict</span>(bestmod, testdat)</span>
-<span id="cb334-10"><a href="#cb334-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">predict=</span>ypred, <span class="at">truth=</span>testdat<span class="sc">$</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb336"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb336-1"><a href="#cb336-1" aria-hidden="true" tabindex="-1"></a>bestmod <span class="ot">&lt;-</span> tune.out<span class="sc">$</span>best.model</span>
+<span id="cb336-2"><a href="#cb336-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb336-3"><a href="#cb336-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb336-4"><a href="#cb336-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb336-5"><a href="#cb336-5" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">20</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb336-6"><a href="#cb336-6" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">20</span> , <span class="at">rep=</span><span class="cn">TRUE</span>)</span>
+<span id="cb336-7"><a href="#cb336-7" aria-hidden="true" tabindex="-1"></a>xtest[ytest<span class="sc">==</span><span class="dv">1</span>, ] <span class="ot">&lt;-</span> xtest[ytest<span class="sc">==</span><span class="dv">1</span>,]<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb336-8"><a href="#cb336-8" aria-hidden="true" tabindex="-1"></a>testdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>xtest, <span class="at">y=</span><span class="fu">as.factor</span>(ytest))</span>
+<span id="cb336-9"><a href="#cb336-9" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">predict</span>(bestmod, testdat)</span>
+<span id="cb336-10"><a href="#cb336-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">predict=</span>ypred, <span class="at">truth=</span>testdat<span class="sc">$</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       truth
 predict -1 1
@@ -2721,42 +2815,285 @@ predict -1 1
      1   2 6</code></pre>
 </div>
 </div>
-<p>Example 3:</p>
+</section>
+</section>
+<section id="polynomial-kernel" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="polynomial-kernel"><span class="header-section-number">6.8</span> Polynomial Kernel</h2>
+<p><span class="math display">\[
+f(x)=\beta_0+\sum_{i\subset S} \alpha_i K(x,x_i)
+\]</span></p>
+<p><span class="math display">\[
+K(x_i, x_i')=(1+\sum^p_{j=1} x_{ij}x_{i'j})^d
+\]</span></p>
+<ul>
+<li>d=1, it is standard linear kernel</li>
+<li>d&gt;1, it fits a SVC in a higher dimensional space.</li>
+</ul>
+</section>
+<section id="radial-kernel" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="radial-kernel"><span class="header-section-number">6.9</span> Radial Kernel</h2>
+<p><span class="math display">\[
+K(x_i,x_{i'})=exp(-\gamma \sum^p_{j=1} (x_{ij}-x_{i'j})^2)
+\]</span></p>
+<p><span class="math display">\[
+f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
+\]</span> This Kernel is more concern about the squared distance between two observation. - Thereby controls variance by reducing most dimensions severely</p>
+<p>Insert Slide 30 Graph</p>
+<p>Insert Slide 31: R function svm() will perform multi-class classification using OVO.</p>
+</section>
+<section id="numeric-example-3" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="numeric-example-3"><span class="header-section-number">6.10</span> Numeric Example 3:</h2>
+<section id="simulation-of-data-1" class="level3" data-number="6.10.1">
+<h3 data-number="6.10.1" class="anchored" data-anchor-id="simulation-of-data-1"><span class="header-section-number">6.10.1</span> Simulation of data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb336"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb336-1"><a href="#cb336-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Support Vector Machine</span></span>
-<span id="cb336-2"><a href="#cb336-2" aria-hidden="true" tabindex="-1"></a><span class="co"># numerical example 3: radial kernel</span></span>
-<span id="cb336-3"><a href="#cb336-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb336-4"><a href="#cb336-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">200</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
-<span id="cb336-5"><a href="#cb336-5" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,] <span class="ot">&lt;-</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]<span class="sc">+</span><span class="dv">2</span></span>
-<span id="cb336-6"><a href="#cb336-6" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>, ] <span class="ot">&lt;-</span> x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>,]<span class="sc">-</span><span class="dv">2</span></span>
-<span id="cb336-7"><a href="#cb336-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">150</span>), <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">50</span>))</span>
-<span id="cb336-8"><a href="#cb336-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x, <span class="at">y=</span><span class="fu">as.factor</span>(y))</span>
-<span id="cb336-9"><a href="#cb336-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x[,<span class="dv">2</span>], x[,<span class="dv">1</span>], <span class="at">col=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb338"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb338-1"><a href="#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Support Vector Machine</span></span>
+<span id="cb338-2"><a href="#cb338-2" aria-hidden="true" tabindex="-1"></a><span class="co"># numerical example 3: radial kernel</span></span>
+<span id="cb338-3"><a href="#cb338-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb338-4"><a href="#cb338-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">200</span><span class="sc">*</span><span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb338-5"><a href="#cb338-5" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,] <span class="ot">&lt;-</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]<span class="sc">+</span><span class="dv">2</span></span>
+<span id="cb338-6"><a href="#cb338-6" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>, ] <span class="ot">&lt;-</span> x[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>,]<span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb338-7"><a href="#cb338-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">150</span>), <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">50</span>))</span>
+<span id="cb338-8"><a href="#cb338-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x, <span class="at">y=</span><span class="fu">as.factor</span>(y))</span>
+<span id="cb338-9"><a href="#cb338-9" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            x.1           x.2 y
+1    1.37354619  2.4094018397 1
+2    2.18364332  3.6888732862 1
+3    1.16437139  3.5865884334 1
+4    3.59528080  1.6690921993 1
+5    2.32950777 -0.2852355353 1
+6    1.17953162  4.4976615898 1
+7    2.48742905  2.6670661668 1
+8    2.73832471  2.5413273360 1
+9    2.57578135  1.9866004769 1
+10   1.69461161  2.5101084230 1
+11   3.51178117  1.8356241682 1
+12   2.38984324  2.4206946433 1
+13   1.37875942  1.5997532560 1
+14  -0.21469989  0.6297921225 1
+15   3.12493092  2.9878382675 1
+16   1.95506639  3.5197450255 1
+17   1.98380974  1.6912594308 1
+18   2.94383621  0.7467102444 1
+19   2.82122120  2.6422413057 1
+20   2.59390132  1.9552908631 1
+21   2.91897737  0.2667815932 1
+22   2.78213630  2.0021318597 1
+23   2.07456498  1.3696996661 1
+24   0.01064830  1.6590314201 1
+25   2.61982575  0.8434276374 1
+26   1.94387126  3.8031419079 1
+27   1.84420449  1.6688679636 1
+28   0.52924762  0.3944865877 1
+29   1.52184994  2.1971934387 1
+30   2.41794156  2.2631756464 1
+31   3.35867955  1.0141732996 1
+32   1.89721227 -0.8889206717 1
+33   2.38767161  1.3595182974 1
+34   1.94619496  2.5705076359 1
+35   0.62294044  1.9402767240 1
+36   1.58500544  1.9018212560 1
+37   1.60571005  2.5608207286 1
+38   1.94068660  0.8135413614 1
+39   3.10002537  3.0967770443 1
+40   2.76317575  1.9946559717 1
+41   1.83547640  2.7073106674 1
+42   1.74663832  3.0341077347 1
+43   2.69696338  2.2234804149 1
+44   2.55666320  1.1212923871 1
+45   1.31124431  3.1629645560 1
+46   1.29250484 -0.0001649448 1
+47   2.36458196  1.4552092600 1
+48   2.76853292  1.7443292908 1
+49   1.88765379  1.8338789632 1
+50   2.88110773  3.0204639088 1
+51   2.39810588  2.1362218931 1
+52   1.38797361  2.4071676034 1
+53   2.34111969  1.9303451870 1
+54   0.87063690  1.7523356584 1
+55   3.43302370  2.6955508066 1
+56   3.98039990  3.1462283572 1
+57   1.63277852 -0.4030962149 1
+58   0.95586537  2.5727395552 1
+59   2.56971963  2.3747244068 1
+60   1.86494540  1.5747322784 1
+61   4.40161776  2.9510128076 1
+62   1.96076000  1.6107628183 1
+63   2.68973936  1.7156693382 1
+64   2.02800216  2.8574097781 1
+65   1.25672679  3.7196272991 1
+66   2.18879230  2.2700549009 1
+67   0.19504137  1.5778159902 1
+68   3.46555486  0.8108867051 1
+69   2.15325334  1.6689670211 1
+70   4.17261167  1.0601706735 1
+71   2.47550953  1.7410674169 1
+72   1.29005357  2.3943791682 1
+73   2.61072635  1.1481429080 1
+74   1.06590237  4.6491668811 1
+75   0.74636660  2.1560116757 1
+76   2.29144624  3.1302072675 1
+77   1.55670813 -0.2891239798 1
+78   2.00110535  2.7410011572 1
+79   2.07434132  0.6837548395 1
+80   1.41047905  2.9198036776 1
+81   1.43133127  2.3981301555 1
+82   1.86482138  1.5924714207 1
+83   3.17808700  3.3242586302 1
+84   0.47643320  1.2987683308 1
+85   2.59394619  1.4193856958 1
+86   2.33295037  0.9989278190 1
+87   3.06309984  1.3318213932 1
+88   1.69581608  2.9451849534 1
+89   2.37001881  2.4337021495 1
+90   2.26709879  3.0051592177 1
+91   1.45747997  1.6098813359 1
+92   3.20786781  2.3763702918 1
+93   3.16040262  2.2441649245 1
+94   2.70021365  0.5737426576 1
+95   3.58683345  3.7784292875 1
+96   2.55848643  2.1344476609 1
+97   0.72340779  2.7655989992 1
+98   1.42673459  2.9551366769 1
+99   0.77538739  1.9494342986 1
+100  1.52659936  1.6941845802 1
+101 -2.62036668 -1.1063262976 1
+102 -1.95788413 -3.0472981491 1
+103 -2.91092165 -0.0286626138 1
+104 -1.84197123 -2.3836321063 1
+105 -2.65458464 -0.3458546977 1
+106 -0.23271273 -0.4877873060 1
+107 -1.28329252 -1.9170342664 1
+108 -1.08982577 -1.4327790851 1
+109 -1.61581464 -3.0245484795 1
+110 -0.31782392 -1.6769934970 1
+111 -2.63573645 -0.9563875416 1
+112 -2.46164473 -1.9009215131 1
+113 -0.56771776 -2.4541369092 1
+114 -2.65069635 -2.6557818525 1
+115 -2.20738074 -2.0359224226 1
+116 -2.39280793 -0.9308385393 1
+117 -2.31999287 -2.4839749303 1
+118 -2.27911330 -2.1210101113 1
+119 -1.50581167 -3.2941400038 1
+120 -2.17733048 -1.5056871640 1
+121 -2.50595746 -0.6920984799 1
+122 -0.65696117 -0.5029589906 1
+123 -2.21457941 -1.1852972691 1
+124 -2.17955653 -3.8697887902 1
+125 -2.10019074 -1.5179704959 1
+126 -1.28733369 -1.5438643967 1
+127 -2.07356440 -2.3534002858 1
+128 -2.03763417 -1.8295105291 1
+129 -2.68166048 -2.8640359541 1
+130 -2.32427027 -1.3207692260 1
+131 -1.93983956 -2.3271010147 1
+132 -2.58889449 -3.5690821851 1
+133 -1.46850381 -2.3674507562 1
+134 -3.51839408 -0.6355650709 1
+135 -1.69344214 -2.3342813647 1
+136 -3.53644982 -1.2672499578 1
+137 -2.30097613 -1.0534143598 1
+138 -2.52827990 -1.9956012957 1
+139 -2.65209478 -2.3523223055 1
+140 -2.05689678 -2.5296955091 1
+141 -3.91435943 -1.2604107744 1
+142 -0.82341669 -3.0634574155 1
+143 -3.66497244 -1.7537891565 1
+144 -2.46353040 -2.2894993666 1
+145 -3.11592011 -4.2648893565 1
+146 -2.75081900 -3.4088504561 1
+147  0.08716655 -1.0839806712 1
+148 -1.98260438 -2.1912789505 1
+149 -3.28630053 -1.1967167839 1
+150 -3.64060553 -0.1125255367 1
+151  0.45018710  1.4738811811 2
+152 -0.01855983  0.6772684923 2
+153 -0.31806837  0.3799626866 2
+154 -0.92936215 -0.1927984265 2
+155 -1.48746031  1.5778917949 2
+156 -1.07519230  0.5962341093 2
+157  1.00002880 -1.1735769409 2
+158 -0.62126669 -0.1556425349 2
+159 -1.38442685 -1.9189098203 2
+160  1.86929062 -0.1952588461 2
+161  0.42510038 -2.5923276699 2
+162 -0.23864710  1.3140021672 2
+163  1.05848305 -0.6355430010 2
+164  0.88642265 -0.4299788387 2
+165 -0.61924305 -0.1693183323 2
+166  2.20610246  0.6122181740 2
+167 -0.25502703  0.6783401772 2
+168 -1.42449465  0.5679519725 2
+169 -0.14439960 -0.5725426039 2
+170  0.20753834 -1.3632912563 2
+171  2.30797840 -0.3887222443 2
+172  0.10580237  0.2779141325 2
+173  0.45699881 -0.8230811216 2
+174 -0.07715294 -0.0688409345 2
+175 -0.33400084 -1.1676623261 2
+176 -0.03472603 -0.0083090142 2
+177  0.78763961  0.1288554016 2
+178  2.07524501 -0.1458756285 2
+179  1.02739244 -0.1639109567 2
+180  1.20790840  1.7635520028 2
+181 -1.23132342  0.7625865124 2
+182  0.98389557  1.1114310807 2
+183  0.21992480 -0.9232069528 2
+184 -1.46725003  0.1643418384 2
+185  0.52102274  1.1548251871 2
+186 -0.15875460 -0.0565214245 2
+187  1.46458731 -2.1293606482 2
+188 -0.76608200  0.3448457621 2
+189 -0.43021175 -1.9049554456 2
+190 -0.92610950 -0.8111701531 2
+191 -0.17710396  1.3240043213 2
+192  0.40201178  0.6156368493 2
+193 -0.73174817  1.0916689555 2
+194  0.83037317  0.3066048615 2
+195 -1.20808279 -0.1101587625 2
+196 -1.04798441 -0.9243127731 2
+197  1.44115771  1.5929137537 2
+198 -1.01584747  0.0450105981 2
+199  0.41197471 -0.7151284007 2
+200 -0.38107605  0.8652230997 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb340"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x[,<span class="dv">2</span>], x[,<span class="dv">1</span>], <span class="at">col=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb337"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb337-1"><a href="#cb337-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">200</span>, <span class="dv">100</span>)</span>
-<span id="cb337-2"><a href="#cb337-2" aria-hidden="true" tabindex="-1"></a>svmfit3 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y<span class="sc">~</span>., <span class="at">data=</span>dat[train,], <span class="at">kernel=</span><span class="st">"radial"</span>,</span>
-<span id="cb337-3"><a href="#cb337-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">gamma=</span><span class="dv">1</span>, <span class="at">cost=</span><span class="dv">1</span>)</span>
-<span id="cb337-4"><a href="#cb337-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit3, dat[train,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="train-test-split" class="level3" data-number="6.10.2">
+<h3 data-number="6.10.2" class="anchored" data-anchor-id="train-test-split"><span class="header-section-number">6.10.2</span> Train-test split</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb341"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb341-1"><a href="#cb341-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">200</span>, <span class="dv">100</span>)</span>
+<span id="cb341-2"><a href="#cb341-2" aria-hidden="true" tabindex="-1"></a>svmfit3 <span class="ot">&lt;-</span> <span class="fu">svm</span>(y<span class="sc">~</span>., <span class="at">data=</span>dat[train,], <span class="at">kernel=</span><span class="st">"radial"</span>,</span>
+<span id="cb341-3"><a href="#cb341-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">gamma=</span><span class="dv">1</span>, <span class="at">cost=</span><span class="dv">1</span>)</span>
+<span id="cb341-4"><a href="#cb341-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svmfit3, dat[train,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Notes_files/figure-html/unnamed-chunk-35-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Notes_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb338"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb338-1"><a href="#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="co">#perform the cross-validation to select gamma and cost</span></span>
-<span id="cb338-2"><a href="#cb338-2" aria-hidden="true" tabindex="-1"></a>tune.out <span class="ot">&lt;-</span> <span class="fu">tune</span>(svm, y<span class="sc">~</span>., <span class="at">data=</span>dat[train,],</span>
-<span id="cb338-3"><a href="#cb338-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">kernel =</span><span class="st">"radial"</span>,</span>
-<span id="cb338-4"><a href="#cb338-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ranges=</span><span class="fu">list</span>(</span>
-<span id="cb338-5"><a href="#cb338-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">cost=</span><span class="fu">c</span>(<span class="fl">0.1</span>,<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">100</span>, <span class="dv">1000</span>),</span>
-<span id="cb338-6"><a href="#cb338-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gamma=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)))</span>
-<span id="cb338-7"><a href="#cb338-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tune.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="perform-cv-to-select-gamma-and-cost" class="level3" data-number="6.10.3">
+<h3 data-number="6.10.3" class="anchored" data-anchor-id="perform-cv-to-select-gamma-and-cost"><span class="header-section-number">6.10.3</span> Perform CV to select <span class="math inline">\(\gamma\)</span> and cost</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb342"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb342-1"><a href="#cb342-1" aria-hidden="true" tabindex="-1"></a><span class="co">#perform the cross-validation to select gamma and cost</span></span>
+<span id="cb342-2"><a href="#cb342-2" aria-hidden="true" tabindex="-1"></a>tune.out <span class="ot">&lt;-</span> <span class="fu">tune</span>(svm, y<span class="sc">~</span>., <span class="at">data=</span>dat[train,],</span>
+<span id="cb342-3"><a href="#cb342-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">kernel =</span><span class="st">"radial"</span>,</span>
+<span id="cb342-4"><a href="#cb342-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ranges=</span><span class="fu">list</span>(</span>
+<span id="cb342-5"><a href="#cb342-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">cost=</span><span class="fu">c</span>(<span class="fl">0.1</span>,<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">100</span>, <span class="dv">1000</span>),</span>
+<span id="cb342-6"><a href="#cb342-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gamma=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)))</span>
+<span id="cb342-7"><a href="#cb342-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tune.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Parameter tuning of 'svm':
@@ -2797,14 +3134,14 @@ Parameter tuning of 'svm':
 24 1e+02   4.0  0.15 0.13540064
 25 1e+03   4.0  0.17 0.13374935</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb340"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1" aria-hidden="true" tabindex="-1"></a>tune.out<span class="sc">$</span>best.parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb344"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb344-1"><a href="#cb344-1" aria-hidden="true" tabindex="-1"></a>tune.out<span class="sc">$</span>best.parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  cost gamma
 2    1   0.5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb342"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb342-1"><a href="#cb342-1" aria-hidden="true" tabindex="-1"></a>bestmod1 <span class="ot">&lt;-</span> tune.out<span class="sc">$</span>best.model</span>
-<span id="cb342-2"><a href="#cb342-2" aria-hidden="true" tabindex="-1"></a>pred1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(bestmod1, <span class="at">newdata=</span>dat[<span class="sc">-</span>train,])</span>
-<span id="cb342-3"><a href="#cb342-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">true=</span>dat[<span class="sc">-</span>train, <span class="st">"y"</span>], pred1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb346"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb346-1"><a href="#cb346-1" aria-hidden="true" tabindex="-1"></a>bestmod1 <span class="ot">&lt;-</span> tune.out<span class="sc">$</span>best.model</span>
+<span id="cb346-2"><a href="#cb346-2" aria-hidden="true" tabindex="-1"></a>pred1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(bestmod1, <span class="at">newdata=</span>dat[<span class="sc">-</span>train,])</span>
+<span id="cb346-3"><a href="#cb346-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">true=</span>dat[<span class="sc">-</span>train, <span class="st">"y"</span>], pred1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    pred1
 true  1  2

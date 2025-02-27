@@ -957,16 +957,16 @@ summary(pls.fitall)
 
 -   Theory to take from python notes
 
-![](images/Lesson5_img1.png)
-## Linear and Quadratic Discriminant Analysis
+![](images/Lesson5_img1.png) \## Linear and Quadratic Discriminant Analysis
 
 ### Theory (Bayes Theorem)
-Base on three metrics:
-$\mu_1 , \mu_2 , \mu_3$ and $\sum_i $
+
+Base on three metrics: $\mu_1 , \mu_2 , \mu_3$ and \$\sum\_i \$
 
 For each value of $Y$, we take the mean,$\mu_i$ of the $X$ features and its $\sum_i$
 
 -   Manual mathematical calculation
+
 ```{r}
 mlr <- read.csv("Datasets/MLR.csv", stringsAsFactors = TRUE)
 library(nnet)
@@ -1034,26 +1034,18 @@ qda.pred$posterior
 
 # Lesson 6: Support Vector Machines
 
-A hyperplane has the form:
-$$
+A hyperplane has the form: $$
 \beta_0+\beta_1X_1+\beta_2X_2 +... +\beta_pX_p=0
-$$
--   Has a subspace of dimension $p-1$ where $p$ is the number of features
+$$ - Has a subspace of dimension $p-1$ where $p$ is the number of features
 
-![](images/Lesson5_img2.png)
-The above graph showcases a one dimensional plane. A vertical line (hyperplane) can be drawn to separate the blue and red dots.     
+![](images/Lesson5_img2.png) The above graph showcases a one dimensional plane.
+A vertical line (hyperplane) can be drawn to separate the blue and red dots.
 
 -   Ideally the distance from the blue dot to the line and the distance from the red dot to the line should be approximately equal. (See topic on margin)
 
-![](images/Lesson5_img3.png)
-Example:
-The hyperplane separates the points:
--   For the blue line, any point on the right is positive while any point on the left is negative
-$$
+![](images/Lesson5_img3.png) Example: The hyperplane separates the points: - For the blue line, any point on the right is positive while any point on the left is negative $$
 -6+0.8X_1+0.6X_2=0
-$$
-Looking at Points (7,4) and (2,5),
-Sub in the points into the above equation
+$$ Looking at Points (7,4) and (2,5), Sub in the points into the above equation
 
 ```{r}
 -6+0.8*(7)+0.6*4 # Positive
@@ -1061,16 +1053,19 @@ Sub in the points into the above equation
 ```
 
 ## Separating Hyperplane
+
 Insert slide 6 of Note 6
 
-Ensure that all purple points are more than 0. Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two $Y$ observations.
+Ensure that all purple points are more than 0.
+Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two $Y$ observations.
 
 ## Margin
 
 -   Denoted as $M$
     -   Distance from the observation to the hyperplane is known as Margin
-    
+
 ## Maximal Margin Classifier
+
 -   Maximise the margin (biggest gap) between the two classes
 
 Insert slide 8
@@ -1078,10 +1073,11 @@ Insert slide 8
 The points that results in a distance within the margin is not that important.
 
 ## Support Vector classifier
-More often, data points generally do not allow for a clean separation. This is where we use support vector classifier that maximises a soft margin.
 
-Insert Slide 11:
-- This allows for some misclassification that maximises the margin.
+More often, data points generally do not allow for a clean separation.
+This is where we use support vector classifier that maximises a soft margin.
+
+Insert Slide 11: - This allows for some misclassification that maximises the margin.
 - If a hard margin is wanted, one will have to sacrifise for a smaller margin.
 
 Insert slide 12
@@ -1090,45 +1086,40 @@ Point 1 is called the incorrect side of the margin as it passed the margin line.
 
 Point 11 is called the incorrect side of the hyperplane.
 
-
 Insert slide 13:
 
 The parameter $C$ controls for the severity of the classication/margin errors.
 
-
 Insert Slide 14:
 
-From the graph above:
-$\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10
-$0<\epsilon_i<1$: 1, 8
-$\epsilon_i>1$: 11, 12
+From the graph above: $\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10 $0<\epsilon_i<1$: 1, 8 $\epsilon_i>1$: 11, 12
 
 Support vectors are: 2, 7, 9
 
 Insert Slide 16:
 
 Why variance is reduced when C is bigger?
-Since the margin is much wider, this means more observations becomes the support vector. If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.
+Since the margin is much wider, this means more observations becomes the support vector.
+If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.
 
-## Coding
+**CODING FOR SVM**
+
 The key is to maximise $M$ subject to $\sum^{p}_{j=1} \beta_j^2=1$
 
-However, in SVM in R, it only takes in the 
-"cost" argument.
+However, in SVM in R, it only takes in the "cost" argument.
 
 -   A larger cost parameter $\rightarrow$ Low Budget C
     -   Narrower margin
     -   Fewer support vector
     -   Lower bias and higher variance
-
 -   A smaller cost parameter $\rightarrow$ High Budget C
     -   Larger margin
     -   More support vector
     -   Higher bias and lower variance
 
-### Numeric Example 1:
+## Numeric Example 1:
 
-#### Simulation of data and basic logistic regression
+### Simulation of data and basic logistic regression
 
 ```{r}
 #Support Vector Classifier example
@@ -1152,7 +1143,7 @@ table(gg, y)
 gg
 ```
 
-#### SVM with cost= 0.10
+### SVM with cost= 0.10
 
 ```{r}
 library(e1071)
@@ -1162,7 +1153,9 @@ svm1
 svm1$index
 svm1$fitted
 ```
-#### SVM with cost= 10
+
+### SVM with cost= 10
+
 ```{r}
 svm2 <- svm(y~x1+x2, data=dd3, kernel="linear", cost=10, scale=FALSE)
 plot(svm2,dd3)
@@ -1170,31 +1163,28 @@ svm2
 svm2$index
 svm2$fitted
 ```
-### Classification with Non-Linear Decision Boundaries
 
-Purpose: To address **non-linearity** in the model
--   Enlarge Features with Polynomial Functions
-    -   Enlarge the feature space by including quadratic/cubic polynomials.
-    
--   Inner Product:
-    Takes the sum of point coordinates
-$$
-(x_i, x_i')=\sum^{p}_{i=1} x_{ij}x_{i'j}
-$$
-For example:
-$X_1: 4, 7, 6, 9$
-$X_2: 2, 5, 4, 6$
+## Classification with Non-Linear Decision Boundaries (Numeric Example 2)
+
+Purpose: To address **non-linearity** in the model - Enlarge Features with Polynomial Functions - Enlarge the feature space by including quadratic/cubic polynomials.
+
+-   Inner Product: Takes the sum of point coordinates $$
+    (x_i, x_i')=\sum^{p}_{i=1} x_{ij}x_{i'j}
+    $$ For example: $X_1: 4, 7, 6, 9$ $X_2: 2, 5, 4, 6$
 
 $(x_i, x_i')= 4\times2+7\times5+6\times4+9\times6$
 
 $$
 f(x)=\beta_0 +\sum^{n}_{i=1} \alpha_i(x,x_i)
-$$
-Most $\alpha$s can be zero as the observation that are away from the separation line do not contribute much to the parameters.
+$$ Most $\alpha$s can be zero as the observation that are away from the separation line do not contribute much to the parameters.
 
 -   Linear Kernel
+    -   Quantifies the similarity of the two observations
 
-### Numeric Example 2:
+## Numeric Example 2:
+
+### Simulation of data
+
 ```{r}
 # numerical example 2:
 library(e1071)
@@ -1204,23 +1194,36 @@ y <- c(rep(-1, 10), rep(1, 10))
 x[y == 1,] <- x[y ==1, ]+1
 plot(x[,2], x[,1], col=3-y)
 dat <- data.frame(x=x, y=as.factor(y))
+dat
+```
+
+### SVM with cost 10
+
+```{r}
 svmfit <- svm(y ~ ., data =dat, kernel="linear", cost =10, scale=FALSE)
 plot(svmfit, dat)
-svmfit$fitted
+svmfit$fitted # Shows how SVM classifies the points
 svmfit$index
 summary(svmfit)
 table(svmfit$fitted, y)
+```
 
+### SVM with cost 0.1
+
+```{r}
 svmfit1 <- svm(y ~ ., data =dat, kernel="linear", cost =0.1, scale=FALSE)
 plot(svmfit1, dat)
-svmfit$fitted
+svmfit$fitted # Shows how SVM classifies the points
 svmfit1$index
 summary(svmfit1)
 table(svmfit1$fitted, y)
+```
 
+### Tuning (Cross validation)
+```{r}
 set.seed(1)
 tune.out <- tune(svm, y~., data=dat, kernel="linear", 
-                 ranges=list(cost=c(0.001, 0.01, 0.1, 1, 5, 10, 100)))
+                 ranges=list(cost=c(0.001, 0.01, 0.1, 1, 5, 10, 100))) # Testing a range of cost
 summary(tune.out)
 bestmod <- tune.out$best.model
 
@@ -1234,7 +1237,39 @@ ypred <- predict(bestmod, testdat)
 table(predict=ypred, truth=testdat$y)
 ```
 
-Example 3:
+## Polynomial Kernel
+
+$$
+f(x)=\beta_0+\sum_{i\subset S} \alpha_i K(x,x_i)
+$$
+
+$$
+K(x_i, x_i')=(1+\sum^p_{j=1} x_{ij}x_{i'j})^d
+$$
+
+-   d=1, it is standard linear kernel
+-   d>1, it fits a SVC in a higher dimensional space.
+
+## Radial Kernel
+
+$$
+K(x_i,x_{i'})=exp(-\gamma \sum^p_{j=1} (x_{ij}-x_{i'j})^2)
+$$
+
+$$
+f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
+$$
+This Kernel is more concern about the squared distance between two observation.
+-   Thereby controls variance by reducing most dimensions severely
+
+Insert Slide 30 Graph
+
+Insert Slide 31: R function svm() will perform multi-class classification using OVO.
+
+
+## Numeric Example 3:
+
+### Simulation of data
 ```{r}
 # Support Vector Machine
 # numerical example 3: radial kernel
@@ -1244,12 +1279,21 @@ x[1:100,] <- x[1:100, ]+2
 x[101:150, ] <- x[101:150,]-2
 y <- c(rep(1, 150), rep(2, 50))
 dat <- data.frame(x=x, y=as.factor(y))
+dat
 plot(x[,2], x[,1], col=y)
+```
 
+### Train-test split
+```{r}
 train <- sample(200, 100)
 svmfit3 <- svm(y~., data=dat[train,], kernel="radial",
                gamma=1, cost=1)
 plot(svmfit3, dat[train,])
+```
+
+### Perform CV to select $\gamma$ and cost
+
+```{r}
 #perform the cross-validation to select gamma and cost
 tune.out <- tune(svm, y~., data=dat[train,],
                  kernel ="radial",
@@ -1262,33 +1306,6 @@ bestmod1 <- tune.out$best.model
 pred1 <- predict(bestmod1, newdata=dat[-train,])
 table(true=dat[-train, "y"], pred1)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
