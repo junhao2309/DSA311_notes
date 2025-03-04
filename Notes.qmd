@@ -1220,6 +1220,7 @@ table(svmfit1$fitted, y)
 ```
 
 ### Tuning (Cross validation)
+
 ```{r}
 set.seed(1)
 tune.out <- tune(svm, y~., data=dat, kernel="linear", 
@@ -1248,7 +1249,7 @@ K(x_i, x_i')=(1+\sum^p_{j=1} x_{ij}x_{i'j})^d
 $$
 
 -   d=1, it is standard linear kernel
--   d>1, it fits a SVC in a higher dimensional space.
+-   d\>1, it fits a SVC in a higher dimensional space.
 
 ## Radial Kernel
 
@@ -1258,18 +1259,17 @@ $$
 
 $$
 f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
-$$
-This Kernel is more concern about the squared distance between two observation.
--   Thereby controls variance by reducing most dimensions severely
+$$ This Kernel is more concern about the squared distance between two observation.
+- Thereby controls variance by reducing most dimensions severely
 
 Insert Slide 30 Graph
 
 Insert Slide 31: R function svm() will perform multi-class classification using OVO.
 
-
 ## Numeric Example 3:
 
 ### Simulation of data
+
 ```{r}
 # Support Vector Machine
 # numerical example 3: radial kernel
@@ -1284,6 +1284,7 @@ plot(x[,2], x[,1], col=y)
 ```
 
 ### Train-test split
+
 ```{r}
 train <- sample(200, 100)
 svmfit3 <- svm(y~., data=dat[train,], kernel="radial",
@@ -1306,11 +1307,3 @@ bestmod1 <- tune.out$best.model
 pred1 <- predict(bestmod1, newdata=dat[-train,])
 table(true=dat[-train, "y"], pred1)
 ```
-
-
-
-
-
-
-
-
