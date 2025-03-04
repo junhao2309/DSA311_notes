@@ -1,4 +1,5 @@
 **Current Notes Status:** Have yet to format Lesson 5 and Lesson 6. Making final update for lesson 1 to 4 by 9 March.
+
 **Current Classwork Status:** Have yet to update answers from classwork 2
 
 Follow these steps for the Notes:
