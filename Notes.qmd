@@ -81,10 +81,12 @@ $$
 
 -   Estimation of $f$
 
-    -   Parametric
+    -   Parametric (Linear, logistic, regression tree, Lasso)
         -   Assumes a function form/shape of $f$
-    -   Non-parametric
+        -   Use the training data to fit
+    -   Non-parametric (Random forest, bagging, bootstrap)
         -   Does not assume the shape of $f$
+        -   Need a very large number of observations
 
 -   Training & Testing Data
 
@@ -97,17 +99,12 @@ $$
 -   Prediction Accuracy VS Interpretability
 
     -   More restrictive (less flexibility) means more interpretable in inference objective
-        -   Less flexibility, it is likely bias is higher. Vice Versa
-        -   Less flexibility, it is likely variance is smaller. Vice Versa
+        -   Less flexibility, it is likely bias is higher and variance is smaller. Vice Versa
     -   For prediction objective, less restrictive does not always yield the best model.
 
 ![](images/Lesson1_img1.png)
 
--   
-
-    ```         
-    Bias Variance Trade Off
-    ```
+-   Bias Variance Trade Off
 
     $$
     E(y_0-\hat{f}(x_0))^2 = Var(\hat{f}(x_0))+[Bias(\hat{f}(x_0))]^2+Var(\epsilon)
@@ -238,54 +235,108 @@ lasso.m2[lasso.m2!=0]
 
 -   Testing Error for Classification
 
+    - False negative rate (FNR): Incorrectly assign a default individual to the no default category
+    - False positive rate (FPR): Incorrectly assign a no default individual to the default category
+    
 -   Confusion Matrix
+    
+    -   Sensitivity: % of true defaulters that are identified as defaulters
+    -   Specificity: % of true non-defaulters that are correctly identified as non-defaulters
 
+Formula:    
+$$
+Sensitivity = \frac{Predicted \space Default}{Total \space no.\space of\space True \space Default}
+$$
+$$
+Specificity = \frac{Predicted \space No \space Default}{Total \space no.\space of\space True \space No \space Default}
+$$
 ![](images/Lesson1_img3.png)
 
 # Lesson 2: Unsupervised Learning I
 
+-   Goals of Unsupervised learning
+
+    -   Observe only the features, $X_1, X_2,..., X_p$
+    -   Gather insights from the data and is not interested in prediction
+  
 ## Principal Components Analysis (PCA)
 
 -   What is it?
 
     -   A dimensionality reduction method by reducing the dimensionality of large data sets
     -   Finds a sequence of linear combinations of the variables that have **maximal variance**, and **mutually uncorrelated**
-
-$$
-X_1, X_2, …, X_{1000} \\
-\text{The above is converted through PCA to output: } \\
-Var(Y_1+Y_2) = Var(Y_1)+Var(Y_2)+2Cov(Y_1, Y_2)
-$$
-
-```         
--   Reducing dimension comes at the expense of accuracy, but essentially to trade little accuracy for simplicity
+    -   Reducing dimension comes at the expense of accuracy, but essentially to trade little accuracy for simplicity
     -   Low dimension data sets are easier to explore and visualize and makes analysing data points easier and faster for machine learning
-```
 
--   Applications of PCA
+Below refers to the above point 2:
+$$
+X_1, X_2, …, X_{1000}
+$$
+
+$$
+\text{The above is converted through PCA to output: } 
+$$
+
+$$
+Var(Y_1+Y_2) = Var(Y_1)+Var(Y_2)+2Cov(Y_1, Y_2)
+$$    
+
+
+**Applications of PCA**
 
 Use the principal components:
 
-```         
-- In understanding and visualising the data
-- As a tool for data imputation, for filling in missing values (No time to cover)
-- As predictors in a regression model, instead of original larger set of independent variables
-```
+-   In understanding and visualising the data
 
--   Mathematical Representation of PCA
+-   As a tool for data imputation, for filling in missing values (No time to cover)
 
-Each observation (row) is multiplied to the loading vector to obtain the scores, $Z$.
+-   As predictors in a regression model, instead of original larger set of independent variables
 
-Loading vector $$
-\phi_i = (\phi_{11}, \phi_{21},... \phi_{p1})^T
+
+Mathematical Representation of PCA
+
+Each observation (X_1,X_2,...,X_p) is multiplied to the loading vector to obtain the scores, $Z$.
+
+Observations vector:
+$$
+X =
+\begin{bmatrix}
+  X_1 & X_2 & ... & X_p
+\end{bmatrix}
 $$
 
-Under PCA, the objective is to minimise the perpendicular distance from the observation to the line.
-As such the distance of the line is maximised.
+Loading vector:
+$$
+\phi_i = 
 
-Goal: $$
+\begin{bmatrix}
+\phi_{11} \\ \phi_{21} \\... \\ \phi_{p1}
+
+\end{bmatrix}
+$$
+The above creates a normalized linear combination of features:
+
+$$
+Z=X\times\phi_i=
+\begin{bmatrix}
+  X_1 & X_2 & ... & X_p
+\end{bmatrix} \begin{bmatrix}
+\phi_{11} \\ \phi_{21} \\... \\ \phi_{p1}
+
+\end{bmatrix} \\
+
+Z= \phi_{11}X_1+\phi_{21}X_2+...+\phi_{p1}X_p
+
+
+$$
+
+Under PCA, the objective is to minimise the perpendicular distance from the observation to the line. As such the distance of the line is maximised.
+
+Goal: 
+
+$$
 \max{\frac{\sum^{n}_{i=1} Z_i^2} {n}}
-$$ (To input graphs from slides)
+$$ 
 
 ### Second Prinipal Component
 
@@ -325,13 +376,18 @@ Using the example above, we have that:
 ![](images/Lesson2_img1.png)
 
 ```{r}
+# Third principal component set of values
 u1 <- U[,1]
-u1
 v1 <- V[,1]
-v1
 d1 <- d[1]
-d1
 A1 <- u1 %*% t(v1)*d1
+```
+
+```{r}
+u1
+v1
+d1
+A1
 round(A1,2)
 ```
 
@@ -341,34 +397,48 @@ By adding another principal component we have:
 ![](images/Lesson2_img2.png)
 
 ```{r}
+# Second principal component set of values
 u2 <- U[,2]
-u2
 v2 <- V[,2]
-v2
 d2 <- d[2]
-d2
 A2 <- u2 %*% t(v2)*d2
-round(A2,2)
 A1A2 <- A1+A2
-round(A1A2,2)
 ```
+
+```{r}
+u2
+v2
+d2
+A2
+round(A2,2)
+round(A1A2, 2)
+```
+
 
 From the above, we see that with PC1 and PC2, it gets closer to the original A matrix.
 
 Repeating the steps one more time.
 
+![](images/Lesson2_img3.png)
+
 ```{r}
+# Third principal component set of values
 u3 <- U[,3]
-u3
 v3 <- V[,3]
-v3
 d3 <- d[3]
-d3
 A3 <- u3 %*% t(v3)*d3
-round(A3,2)
 A1A2A3 <- A1+A2+A3
+```
+
+```{r}
+u3
+v3
+d3
+A3
+round(A3,2)
 round(A1A2A3, 2)
 ```
+
 
 ## Proportion of Variance Explained (PVE)
 
@@ -476,7 +546,24 @@ For the above graph, the top represents PC1 score while the right scale represen
 pr.out$rotation <- -pr.out$rotation
 pr.out$x <- -pr.out$x
 biplot(pr.out, scale = 0, main = "The first two Principal Components mirror image")
+```
 
+Explanation of the graph above:
+
+-   Red Arrows:
+
+    -   The direction of an arrow shows how that variable influences the principal components.
+    -   The length of an arrow indicates how strongly that variable contributes to the principal components.
+    
+-   Interpretation of Loading:
+    
+    -   Murder, Assault, and Rape are pointing in the same general direction, meaning they are correlated.
+        -   It suggest that Florida seems to have relately high values for Murder, Assault and Rape.
+        -   The states on the left side have lower values for murder, assault and rape
+    -   UrbanPop is pointing in a different direction, suggesting it has a different relationship with crime rates.
+
+
+```{r}
 # Calculate and print the proportion of variance explained by each principal component
 pr.var <- pr.out$sdev^2
 pve <- pr.var/sum(pr.var)
