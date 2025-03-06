@@ -1681,9 +1681,13 @@ qda.pred$posterior
 
 # Lesson 6: Support Vector Machines `r emoji::emoji("horses")`
 
-A hyperplane has the form: $$
+A hyperplane has the form: 
+
+$$
 \beta_0+\beta_1X_1+\beta_2X_2 +... +\beta_pX_p=0
-$$ - Has a subspace of dimension $p-1$ where $p$ is the number of features
+$$ 
+
+-   Has a subspace of dimension $p-1$ where $p$ is the number of features
 
 ![](images/Lesson6_img1.png) 
 
@@ -1692,9 +1696,17 @@ A vertical line (hyperplane) can be drawn to separate the blue and red dots.
 
 -   Ideally the distance from the blue dot to the line and the distance from the red dot to the line should be approximately equal. (See topic on margin)
 
-![](images/Lesson5_img3.png) Example: The hyperplane separates the points: - For the blue line, any point on the right is positive while any point on the left is negative $$
+![](images/Lesson6_img2.png) 
+
+Example: The hyperplane separates the points: 
+
+-   For the blue line, any point on the right is positive while any point on the left is negative 
+
+$$
 -6+0.8X_1+0.6X_2=0
-$$ Looking at Points (7,4) and (2,5), Sub in the points into the above equation
+$$ 
+
+Looking at Points (7,4) and (2,5), Sub in the points into the above equation
 
 ```{r}
 -6+0.8*(7)+0.6*4 # Positive
@@ -1703,7 +1715,7 @@ $$ Looking at Points (7,4) and (2,5), Sub in the points into the above equation
 
 ## Separating Hyperplane
 
-Insert slide 6 of Note 6
+![](images/Lesson6_img3.png) 
 
 Ensure that all purple points are more than 0.
 Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two $Y$ observations.
@@ -1717,37 +1729,60 @@ Any deviations would suggest misclassification aka, the hyperplane did not prope
 
 -   Maximise the margin (biggest gap) between the two classes
 
-Insert slide 8
+![](images/Lesson6_img4.png) 
 
 The points that results in a distance within the margin is not that important.
 
 ## Support Vector classifier
 
+What it does is:
+
+-   Greater robustness to individual observations
+-   Better classification of most of the training observations.
+
 More often, data points generally do not allow for a clean separation.
+
 This is where we use support vector classifier that maximises a soft margin.
 
-Insert Slide 11: - This allows for some misclassification that maximises the margin.
-- If a hard margin is wanted, one will have to sacrifise for a smaller margin.
+![](images/Lesson6_img5.png) 
 
-Insert slide 12
+-   This allows for some misclassification that maximises the margin.
+-   If a hard margin is wanted, one will have to sacrifise for a smaller margin.
 
-Point 1 is called the incorrect side of the margin as it passed the margin line.
+![](images/Lesson6_img6.png)
 
-Point 11 is called the incorrect side of the hyperplane.
+-   Point 1 is called the incorrect side of the margin as it passed the margin line.
 
-Insert slide 13:
+-   Point 11 is called the incorrect side of the hyperplane.
 
-The parameter $C$ controls for the severity of the classication/margin errors.
+![](images/Lesson6_img7.png)
 
-Insert Slide 14:
+-   The parameter $C$ controls for the severity of the classication/margin errors.
 
-From the graph above: $\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10 $0<\epsilon_i<1$: 1, 8 $\epsilon_i>1$: 11, 12
+![](images/Lesson6_img8.png)
+
+From the graph above: 
+-   $\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10
+-   $0<\epsilon_i<1$: 1, 8 
+-   $\epsilon_i>1$: 11, 12
 
 Support vectors are: 2, 7, 9
 
-Insert Slide 16:
+**Budget C**
 
-Why variance is reduced when C is bigger?
+-   C controls the bias-variance trade-off of the statistical learning technique.
+-   When C is small, we seek narrow margins that are rarely violated; this amount to a classifier that is
+highly fit to the data
+-   When C is larger, the margin is wider, and we allow more violations to it. This amount to more bias
+and less variance
+-   Note that observation that lies strictly on the correct side of the margin does not affect the support
+vector classifier! Only support vectors (lying directly on the margin, or on the wrong side of the
+margin) do!
+-   The support vector classifier’s decision rule is based on only on a potentially small subset of the
+training observations. That means it is quite robust to the behavior of observations that are far
+away from the hyperplane.
+
+**Why variance is reduced when C is bigger?**
 Since the margin is much wider, this means more observations becomes the support vector.
 If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.
 
@@ -1755,7 +1790,9 @@ If any one of the observation changes, it has little impact on the hyperplane as
 
 The key is to maximise $M$ subject to $\sum^{p}_{j=1} \beta_j^2=1$
 
-However, in SVM in R, it only takes in the "cost" argument.
+![](images/Lesson6_img9.png)
+
+However, in SVM in R, it only takes in the "cost" argument, thereby minimises the expression above.
 
 -   A larger cost parameter $\rightarrow$ Low Budget C
     -   Narrower margin
@@ -1898,7 +1935,7 @@ K(x_i, x_i')=(1+\sum^p_{j=1} x_{ij}x_{i'j})^d
 $$
 
 -   d=1, it is standard linear kernel
--   d\>1, it fits a SVC in a higher dimensional space.
+-   d>1, it fits a SVC in a higher dimensional space.
 
 ## Radial Kernel
 
@@ -1908,12 +1945,16 @@ $$
 
 $$
 f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
-$$ This Kernel is more concern about the squared distance between two observation.
-- Thereby controls variance by reducing most dimensions severely
+$$ 
+This Kernel is more concern about the squared distance between two observation.
 
-Insert Slide 30 Graph
+-   Thereby controls variance by reducing most dimensions severely
 
-Insert Slide 31: R function svm() will perform multi-class classification using OVO.
+![](images/Lesson6_img10.png) 
+
+![](images/Lesson6_img11.png) 
+
+-   R function svm() will perform multi-class classification using OVO.
 
 ## Numeric Example 3:
 
@@ -1956,3 +1997,8 @@ bestmod1 <- tune.out$best.model
 pred1 <- predict(bestmod1, newdata=dat[-train,])
 table(true=dat[-train, "y"], pred1)
 ```
+
+
+
+
+

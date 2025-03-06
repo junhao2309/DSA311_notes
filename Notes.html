@@ -3773,17 +3773,27 @@ qda.class Down  Up
 </section>
 <section id="lesson-6-support-vector-machines" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Lesson 6: Support Vector Machines 🐴</h1>
-<p>A hyperplane has the form: <span class="math display">\[
+<p>A hyperplane has the form:</p>
+<p><span class="math display">\[
 \beta_0+\beta_1X_1+\beta_2X_2 +... +\beta_pX_p=0
-\]</span> - Has a subspace of dimension <span class="math inline">\(p-1\)</span> where <span class="math inline">\(p\)</span> is the number of features</p>
+\]</span></p>
+<ul>
+<li>Has a subspace of dimension <span class="math inline">\(p-1\)</span> where <span class="math inline">\(p\)</span> is the number of features</li>
+</ul>
 <p><img src="images/Lesson6_img1.png" class="img-fluid"></p>
 <p>The above graph showcases a one dimensional plane. A vertical line (hyperplane) can be drawn to separate the blue and red dots.</p>
 <ul>
 <li>Ideally the distance from the blue dot to the line and the distance from the red dot to the line should be approximately equal. (See topic on margin)</li>
 </ul>
-<p><img src="images/Lesson5_img3.png" class="img-fluid"> Example: The hyperplane separates the points: - For the blue line, any point on the right is positive while any point on the left is negative <span class="math display">\[
+<p><img src="images/Lesson6_img2.png" class="img-fluid"></p>
+<p>Example: The hyperplane separates the points:</p>
+<ul>
+<li>For the blue line, any point on the right is positive while any point on the left is negative</li>
+</ul>
+<p><span class="math display">\[
 -6+0.8X_1+0.6X_2=0
-\]</span> Looking at Points (7,4) and (2,5), Sub in the points into the above equation</p>
+\]</span></p>
+<p>Looking at Points (7,4) and (2,5), Sub in the points into the above equation</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb375"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb375-1"><a href="#cb375-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="dv">6</span><span class="fl">+0.8</span><span class="sc">*</span>(<span class="dv">7</span>)<span class="sc">+</span><span class="fl">0.6</span><span class="sc">*</span><span class="dv">4</span> <span class="co"># Positive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3796,7 +3806,7 @@ qda.class Down  Up
 </div>
 <section id="separating-hyperplane" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="separating-hyperplane"><span class="header-section-number">6.1</span> Separating Hyperplane</h2>
-<p>Insert slide 6 of Note 6</p>
+<p><img src="images/Lesson6_img3.png" class="img-fluid"></p>
 <p>Ensure that all purple points are more than 0. Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two <span class="math inline">\(Y\)</span> observations.</p>
 </section>
 <section id="margin" class="level2" data-number="6.2">
@@ -3813,26 +3823,48 @@ qda.class Down  Up
 <ul>
 <li>Maximise the margin (biggest gap) between the two classes</li>
 </ul>
-<p>Insert slide 8</p>
+<p><img src="images/Lesson6_img4.png" class="img-fluid"></p>
 <p>The points that results in a distance within the margin is not that important.</p>
 </section>
 <section id="support-vector-classifier" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="support-vector-classifier"><span class="header-section-number">6.4</span> Support Vector classifier</h2>
-<p>More often, data points generally do not allow for a clean separation. This is where we use support vector classifier that maximises a soft margin.</p>
-<p>Insert Slide 11: - This allows for some misclassification that maximises the margin. - If a hard margin is wanted, one will have to sacrifise for a smaller margin.</p>
-<p>Insert slide 12</p>
-<p>Point 1 is called the incorrect side of the margin as it passed the margin line.</p>
-<p>Point 11 is called the incorrect side of the hyperplane.</p>
-<p>Insert slide 13:</p>
-<p>The parameter <span class="math inline">\(C\)</span> controls for the severity of the classication/margin errors.</p>
-<p>Insert Slide 14:</p>
-<p>From the graph above: <span class="math inline">\(\epsilon_i=0\)</span>: 2, 3, 4, 5, 6,7, 9, 10 <span class="math inline">\(0&lt;\epsilon_i&lt;1\)</span>: 1, 8 <span class="math inline">\(\epsilon_i&gt;1\)</span>: 11, 12</p>
+<p>What it does is:</p>
+<ul>
+<li>Greater robustness to individual observations</li>
+<li>Better classification of most of the training observations.</li>
+</ul>
+<p>More often, data points generally do not allow for a clean separation.</p>
+<p>This is where we use support vector classifier that maximises a soft margin.</p>
+<p><img src="images/Lesson6_img5.png" class="img-fluid"></p>
+<ul>
+<li>This allows for some misclassification that maximises the margin.</li>
+<li>If a hard margin is wanted, one will have to sacrifise for a smaller margin.</li>
+</ul>
+<p><img src="images/Lesson6_img6.png" class="img-fluid"></p>
+<ul>
+<li><p>Point 1 is called the incorrect side of the margin as it passed the margin line.</p></li>
+<li><p>Point 11 is called the incorrect side of the hyperplane.</p></li>
+</ul>
+<p><img src="images/Lesson6_img7.png" class="img-fluid"></p>
+<ul>
+<li>The parameter <span class="math inline">\(C\)</span> controls for the severity of the classication/margin errors.</li>
+</ul>
+<p><img src="images/Lesson6_img8.png" class="img-fluid"></p>
+<p>From the graph above: - <span class="math inline">\(\epsilon_i=0\)</span>: 2, 3, 4, 5, 6,7, 9, 10 - <span class="math inline">\(0&lt;\epsilon_i&lt;1\)</span>: 1, 8 - <span class="math inline">\(\epsilon_i&gt;1\)</span>: 11, 12</p>
 <p>Support vectors are: 2, 7, 9</p>
-<p>Insert Slide 16:</p>
-<p>Why variance is reduced when C is bigger? Since the margin is much wider, this means more observations becomes the support vector. If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.</p>
+<p><strong>Budget C</strong></p>
+<ul>
+<li>C controls the bias-variance trade-off of the statistical learning technique.</li>
+<li>When C is small, we seek narrow margins that are rarely violated; this amount to a classifier that is highly fit to the data</li>
+<li>When C is larger, the margin is wider, and we allow more violations to it. This amount to more bias and less variance</li>
+<li>Note that observation that lies strictly on the correct side of the margin does not affect the support vector classifier! Only support vectors (lying directly on the margin, or on the wrong side of the margin) do!</li>
+<li>The support vector classifier’s decision rule is based on only on a potentially small subset of the training observations. That means it is quite robust to the behavior of observations that are far away from the hyperplane.</li>
+</ul>
+<p><strong>Why variance is reduced when C is bigger?</strong> Since the margin is much wider, this means more observations becomes the support vector. If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.</p>
 <p><strong>CODING FOR SVM</strong></p>
 <p>The key is to maximise <span class="math inline">\(M\)</span> subject to <span class="math inline">\(\sum^{p}_{j=1} \beta_j^2=1\)</span></p>
-<p>However, in SVM in R, it only takes in the “cost” argument.</p>
+<p><img src="images/Lesson6_img9.png" class="img-fluid"></p>
+<p>However, in SVM in R, it only takes in the “cost” argument, thereby minimises the expression above.</p>
 <ul>
 <li>A larger cost parameter <span class="math inline">\(\rightarrow\)</span> Low Budget C
 <ul>
@@ -4229,9 +4261,15 @@ K(x_i,x_{i'})=exp(-\gamma \sum^p_{j=1} (x_{ij}-x_{i'j})^2)
 \]</span></p>
 <p><span class="math display">\[
 f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
-\]</span> This Kernel is more concern about the squared distance between two observation. - Thereby controls variance by reducing most dimensions severely</p>
-<p>Insert Slide 30 Graph</p>
-<p>Insert Slide 31: R function svm() will perform multi-class classification using OVO.</p>
+\]</span> This Kernel is more concern about the squared distance between two observation.</p>
+<ul>
+<li>Thereby controls variance by reducing most dimensions severely</li>
+</ul>
+<p><img src="images/Lesson6_img10.png" class="img-fluid"></p>
+<p><img src="images/Lesson6_img11.png" class="img-fluid"></p>
+<ul>
+<li>R function svm() will perform multi-class classification using OVO.</li>
+</ul>
 </section>
 <section id="numeric-example-3" class="level2" data-number="6.10">
 <h2 data-number="6.10" class="anchored" data-anchor-id="numeric-example-3"><span class="header-section-number">6.10</span> Numeric Example 3:</h2>
