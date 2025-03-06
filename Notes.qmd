@@ -579,30 +579,44 @@ plot(cumsum(pve), xlab = "Cumulative Principal Component", ylab = "Proportion of
 
 ## Kmeans-clustering
 
-An approach for partitioning a dataset into $K$ distinct, non-overlapping clusters - Properties
+An approach for partitioning a dataset into $K$ distinct, non-overlapping clusters 
 
-```         
-- Each observation belongs to at least one of the K clusters
-- Clusters are non-overlapping: No observation belongs to more than one cluster
-```
+-   Properties
 
--   Within Cluster Variation $$
-    \min_{C_1,...,C_K} \{\sum^K_{k=1} WCV(C_k) \} 
-    $$ The formula above is to be solved such that the total within-cluster variation, summed over all $K$ clusters, is minimised.
+    -   Each observation belongs to at least one of the K clusters
 
-    -   Euclidean distance calculation: $$
-        WCV(C_k)= \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2
-        $$ where $|C_k|$ denotes the no. of obs in the $k$th cluster.
+    -   Clusters are non-overlapping: No observation belongs to more than one cluster
+
+-   Within Cluster Variation 
+
+$$
+\min_{C_1,...,C_K} \{\sum^K_{k=1} WCV(C_k) \} 
+$$ 
+
+The formula above is to be solved such that the total within-cluster variation, summed over all $K$ clusters, is minimised.
+
+-   Euclidean distance calculation: 
+    
+$$
+WCV(C_k)= \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2
+$$ 
+where $|C_k|$ denotes the no. of obs in the $k$th cluster.
 
 $(x_{ij}-x_{i'j})^2$ : Represents the distance between two observation
 
-Combining the two formulas above gives us: $$
-\min_{C_1,...,C_K} \{\sum^K_{k=1} \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2 \} 
-$$ Can be simplied to: $$
-2\sum_{i\subset C_k}\sum^{p}_{j=1} (x_{ij}-\bar{x}_{kj})^2
-$$ \$\bar{x}\_{kj} \$ : Represents the mean of the cluster The code chunk below uses the formulas above to deduce the total sum.
+Combining the two formulas above gives us: 
 
-(Need more inputs after lesson)
+$$
+\min_{C_1,...,C_K} \{\sum^K_{k=1} \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2 \} 
+$$ 
+Can be simplied to: 
+$$
+2\sum_{i\subset C_k}\sum^{p}_{j=1} (x_{ij}-\bar{x}_{kj})^2
+$$
+
+$\bar{x}\_{kj}$ : Represents the mean of the cluster The code chunk below uses the formulas above to deduce the total sum.
+
+The code chunk below manually calculates the formula seen above
 
 ```{r}
 d1 <- c(12, 13, 14, 17, 20)
@@ -614,31 +628,38 @@ for (i in 1: length(d1)) {
   su1 <- su1 + sum((d1[i]-d1)^2)
 }
 s1 <- su1/length(d1)
-s1
 
 su2=0
 for (i in 1: length(d2)) {
   su2 <- su2 + sum((d2[i]-d2)^2)
 }
 s2 <- su2/length(d2)
-s2
 
 su3=0
 for (i in 1: length(d3)) {
   su3 <- su3 + sum((d3[i]-d3)^2)
 }
 s3 <- su3/length(d3)
-s3
+```
 
+```{r}
+s1 ; s2 ; s3
+```
+
+```{r}
 tots <- s1+s2+s3
 tots
+```
 
+```{r}
 sum1 <- sum((d1-mean(d1))^2)
 sum2 <- sum((d2-mean(d2))^2)
 sum3 <- sum((d3-mean(d3))^2)
 totsum <- 2*(sum1+sum2+sum3)
 c(sum1, sum2, sum3, totsum)
 ```
+
+We see that both formula yield the same total value.
 
 ### General steps in K-clustering
 
@@ -654,24 +675,75 @@ c(sum1, sum2, sum3, totsum)
 
 Visual Representation of the steps:
 
-![](images/Lesson3_img3.png) \#### Example Code of the steps shown above
+![](images/Lesson3_img3.png) 
+
+### Example Code of the steps shown above
 
 ```{r}
 set.seed(2)
 x <- matrix(c(12, 13, 11, 18, 16, 17, 19, 20, 21, 22), ncol=2)
-# x # To view the matrix
+x # To view the matrix
+
 plot(x, main="plot of X1 and X2", xlab="X1", ylab="X2", pch=20, cex=2)
+
 k.out <- kmeans(x, centers = 2, nstart=20)  # centers : No. of clusters, nstart: No. of random sets
 k.out$cluster
+
+# Plot the Clusters
 plot(x, col=(k.out$cluster+1), main="K-means Clustering Results with K=2",
      xlab="X1", ylab="X2", pch=20, cex=2)
+
+# Get the summary of the cluster
 k.out
 ```
 
 Total variation is reduced by 81.2% by clustering them.
 
-Below is how the variation is manually calculated.
-We can see that the end result is the same as the above
+**Steps taken from the above example:**
+
+1.    Randomly placed with 2 clusters
+
+    -   Cluster 1: 
+$$
+(12,17),\space (16,22)
+$$
+    
+    -   Cluster 2: 
+$$
+(13,19),\space (11,20), \space (18,21)
+$$
+    
+2.    Calculate the centroid of each cluster
+
+    -   Cluster 1: 
+$$
+[\frac{12+16}{2},\space \frac{17+22}{2}] = [14, 19.5]
+$$
+    
+    -   Cluster 2:
+$$
+[\frac{13+11+18}{3},\space \frac{19+20+21}{3}] = [14, 20]
+$$
+
+3.    Form the new cluster by comparing the distance from the centroid of each cluster
+
+    -   New cluster 1: 
+$$
+(12,17), (13,19)
+$$
+    
+    -   New cluster 2:
+$$
+(16, 22), (11,20), (18,21)
+$$
+
+From the above, we see that observation $(13,19)$ is closer to the centroid of cluster 1. Hence we bring that observation over. Similarly for observation $(16,22)$ where it is closer to the centroid of cluster 2. Hence we will bring that observation over.
+
+The steps above will be repeated until no more changes can be made.
+
+
+**Below is how the variation is manually calculated.
+We can see that the end result is the same as the above**
 
 ```{r}
 # Manual calculation of the variation:
@@ -700,11 +772,10 @@ ssg2
 # calculate the proportion of sum of squares explained by clusters
 1-(ssg1+ssg2)/sstot
 ```
-
+    
 ### Practical Application
 
 #### Initial Visualisation of PCA
-
 ```{r}
 score <- read.csv("Datasets/Score.csv", stringsAsFactors = TRUE)
 summary(score)
@@ -741,7 +812,7 @@ plot(pr.out$x[,1], pr.out$x[,2], col=(k.out$cluster+1),
      xlab="PC1", ylab="PC2", pch=20, cex=2)
 ```
 
-## Hierarchical clustering - (To copy over from python notes)
+## Hierarchical clustering
 
 ### Theory
 
