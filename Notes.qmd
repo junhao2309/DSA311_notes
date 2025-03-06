@@ -983,29 +983,237 @@ cutree(gga, 3)
 
 # Lesson 4: Multiple Linear Regression
 
-## Basic theory of Regression Model
+## Basic theory of Regression Model 
+Note: (Refer to stat learning notes)
+
+$$
+Y = \beta_0 +\beta_1X_1
++\beta_2X_2+ ...+\beta_p X_p+\epsilon
+$$
 
 -   Interpretation of coefficient
 -   Qualitative Variables
+    
+    -   Refers to binary variables
+    
 -   Interaction variables
+    
+    -   Refers to multiplying two variables together to create an interaction effect
+    
 -   Non-linear effects
--   (Copy over from Stat learning)
-
+    
+    -   Refers to the use of power terms in the regression to capture non-linear effects
+    
 ## Dimension Reduction
 
 ### Best subset approach
 
--   (Copy over from Stat learning)
+Note: Taken from Stat learning with R
+```{r}
+library(ISLR)
+library(leaps) # Subset package
+# Important to remove NA values from dataset
+Hit <- na.omit(Hitters)
+```
+
+::: panel-tabset
+## Best Subset Selection
+
+### Do best subset model
+
+```{r}
+regfit2.all <- regsubsets(Salary~., Hit, nvmax=19) # nvmax = 19 as there are 19 variables. Categorical variable counts as total number of levels - 1
+reg2.summary <- summary(regfit2.all)
+```
+
+### Visualize Plots
+
+```{r}
+plot(reg2.summary$rss, main="RSS plot", 
+     xlab="Number of variables", ylab="RSS", type="b")
+plot(reg2.summary$adjr2, main="Adjusted r^2 plot", 
+     xlab="Number of variables", ylab="Adjusted r^2", type="b")
+plot(reg2.summary$cp, main="Cp plot", 
+     xlab="Number of variables", ylab="Cp", type="b")
+plot(reg2.summary$bic, main="BIC plot", 
+     xlab="Number of variables", ylab="BIC", type="b")
+
+```
+
+### Pick best model based on selected Criterion
+
+```{r}
+a <- which.min(reg2.summary$rss)
+b <- which.max(reg2.summary$adjr2)
+c <- which.min(reg2.summary$cp)
+d <- which.min(reg2.summary$bic)
+coef(regfit2.all, a)
+coef(regfit2.all, b)
+coef(regfit2.all, c)
+coef(regfit2.all, d)
+```
+
+## Forward Stepwise Selection
+
+### Do best subset model
+
+```{r}
+regfit4.all <- regsubsets(Salary~., Hit, nvmax=19,
+                          method ="forward") # nvmax = 19 as there are 19 variables. Categorical variable counts as total number of levels - 1
+reg4.summary <- summary(regfit4.all)
+```
+
+### Visualize Plots
+
+```{r}
+plot(reg4.summary$rss, main="RSS plot", 
+     xlab="Number of variables", ylab="RSS", type="b")
+plot(reg4.summary$adjr2, main="Adjusted r^2 plot", 
+     xlab="Number of variables", ylab="Adjusted r^2", type="b")
+plot(reg4.summary$cp, main="Cp plot", 
+     xlab="Number of variables", ylab="Cp", type="b")
+plot(reg4.summary$bic, main="BIC plot", 
+     xlab="Number of variables", ylab="BIC", type="b")
+
+```
+
+### Pick best model based on selected Criterion
+
+```{r}
+a <- which.min(reg4.summary$rss)
+b <- which.max(reg4.summary$adjr2)
+c <- which.min(reg4.summary$cp)
+d <- which.min(reg4.summary$bic)
+coef(regfit4.all, a)
+coef(regfit4.all, b)
+coef(regfit4.all, c)
+coef(regfit4.all, d)
+```
+
+## Backward Stepwise Selection
+
+### Do Backward selection model
+
+```{r}
+regfit3.all <- regsubsets(Salary~., Hit, nvmax=19,
+                          method = "backward") 
+# nvmax = 19 as there are 19 variables. Categorical variable counts as total number of levels - 1
+reg3.summary <- summary(regfit3.all)
+```
+
+### Visualize Plots
+
+```{r}
+plot(reg3.summary$rss, main="RSS plot", 
+     xlab="Number of variables", ylab="RSS", type="b")
+plot(reg3.summary$adjr2, main="Adjusted r^2 plot", 
+     xlab="Number of variables", ylab="Adjusted r^2", type="b")
+plot(reg3.summary$cp, main="Cp plot", 
+     xlab="Number of variables", ylab="Cp", type="b")
+plot(reg3.summary$bic, main="BIC plot", 
+     xlab="Number of variables", ylab="BIC", type="b")
+```
+
+### Pick best model based on selected Criterion
+
+```{r}
+a <- which.min(reg3.summary$rss)
+b <- which.max(reg3.summary$adjr2)
+c <- which.min(reg3.summary$cp)
+d <- which.min(reg3.summary$bic)
+coef(regfit3.all, a)
+coef(regfit3.all, b)
+coef(regfit3.all, c)
+coef(regfit3.all, d)
+```
+:::
 
 ### Lasso / Ridge
+::: panel-tabset
 
--   (Copy over from Stat learning)
+### Lasso
+
+```{r}
+# Load the necessary library
+library(ISLR)
+library(glmnet)
+
+# Load the Hitters dataset
+data("Hitters")
+
+# Remove rows with missing values
+Hitters <- na.omit(Hitters)
+
+# Create the target variable and predictors
+x <- model.matrix(Salary ~ ., Hitters)[, -1]  # Predictor matrix (exclude intercept)
+y <- Hitters$Salary  # Response variable
+
+# Perform cross-validation for Lasso regression
+set.seed(123)
+cv.lasso <- cv.glmnet(x, y, alpha = 1)  # alpha = 1 for Lasso (L1 penalty)
+
+# Plot the cross-validation results
+plot(cv.lasso)
+
+# View the optimal lambda from cross-validation
+cv.lasso$lambda.min
+
+# Fit the model using the optimal lambda
+lasso.model <- glmnet(x, y, alpha = 1, lambda = cv.lasso$lambda.min)
+
+# Predict on the test data (or using a train-test split)
+predictions.lasso <- predict(lasso.model, s = cv.lasso$lambda.min, newx = x)
+
+# Evaluate the performance (MSE, RMSE, etc.)
+mse.lasso <- mean((predictions.lasso - y)^2)
+rmse.lasso <- sqrt(mse.lasso)
+print(paste("Lasso RMSE: ", rmse.lasso))
+```
+
+### Ridge
+```{r}
+# Load the necessary library
+library(ISLR)
+library(glmnet)
+
+# Load the Hitters dataset
+data("Hitters")
+
+# Remove rows with missing values
+Hitters <- na.omit(Hitters)
+# Create the target variable and predictors
+x <- model.matrix(Salary ~ ., Hitters)[, -1]  # Predictor matrix (exclude intercept)
+y <- Hitters$Salary  # Response variable
+
+# Perform cross-validation for Ridge regression
+set.seed(123)
+cv.ridge <- cv.glmnet(x, y, alpha = 0)  # alpha = 0 for Ridge (L2 penalty)
+
+# Plot the cross-validation results
+plot(cv.ridge)
+
+# View the optimal lambda from cross-validation
+cv.ridge$lambda.min
+
+# Fit the model using the optimal lambda
+ridge.model <- glmnet(x, y, alpha = 0, lambda = cv.ridge$lambda.min)
+
+# Predict on the test data (or using a train-test split)
+predictions.ridge <- predict(ridge.model, s = cv.ridge$lambda.min, newx = x)
+
+# Evaluate the performance (MSE, RMSE, etc.)
+mse.ridge <- mean((predictions.ridge - y)^2)
+rmse.ridge <- sqrt(mse.ridge)
+print(paste("Ridge RMSE: ", rmse.ridge))
+```
+
+:::
 
 ### PCR regression
 
 #### Theory
 
--   PCR perform better: Lower variance but higher bias (When $M<p$)
+-   PCR may perform better: Lower variance but higher bias (When $M<p$)
 -   When $M=p$ and no dimension reduction occurs, results are the same as OLS method.
 
 #### Example 1
@@ -1018,9 +1226,20 @@ The code below does PCA and the regression separately
 library(pls)
 blood <- read.csv("Datasets/BPressure.csv", stringsAsFactors = TRUE)
 cor(blood)
+```
+From the above, we notice that there is high correlation between the features.
+
+-   Basic regression
+
+```{r}
 reg.re <- lm(BP~., data=blood)
 summary(reg.re)
 predict(reg.re, blood)
+```
+
+-   Regression with PCR (Uses lm function and pc codes)
+
+```{r}
 pr.out <- prcomp(blood[,-1], scale=TRUE) # Removing the BP column
 summary(pr.out)
 pr.out$x
@@ -1029,18 +1248,27 @@ lmpr <- lm(blood$BP~pr.out$x[,1]) # Using only the first principle component
 summary(lmpr)               
 ```
 
-The code below uses a predefined function for PCR.
+
+-   The code below uses a predefined function for PCR.
 
 ```{r}
 pcr.re1 <- pcr(BP~., data=blood, scale=TRUE, ncomp=1)
 summary(pcr.re1)
 pcr.re1$fitted.values
 newx1 <- pcr.re1$scores # Obtains the principal component score
+```
+
+Take the obtained principal score and do a regression with it. As shown below:
+
+```{r}
 newx1
 newreg1 <- lm(blood$BP ~ newx1)
 summary(newreg1)
+```
 
-# If you use M=p, then you go back to the original OLS method.
+If you use M=p, then you go back to the original OLS method.
+
+```{r}
 pcr.re2 <- pcr(BP~., data=blood, scale=TRUE, ncomp=2)
 summary(pcr.re2)
 pcr.re2$fitted.values
@@ -1050,7 +1278,19 @@ newreg2 <- lm(blood$BP ~ newx2)
 summary(newreg2)
 ```
 
-#### Example 1
+Cross compare between the regressions done above.
+
+#### Number of components vs Test MSE:
+
+The larger the number of components:
+-   the **smaller** the **bias**
+-   the **larger** the **variance**
+
+To minimise the MSE in PCR, cross validation is used to determine the number of components.
+
+The code below does the 10fold cross validation as explained earlier:
+
+#### Cross validation for pcr
 
 ```{r}
 library(ISLR2)
@@ -1089,9 +1329,15 @@ pcr.fitall <- pcr(Salary~., data=Hitters, scale=TRUE, ncomp=5)
 summary(pcr.fitall)
 ```
 
-#### Partial Least Squares Method
 
-(To review theory again) - Difference to PCR: - It identifies the new features in a supervised way: - Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$ - Afterwhich take the residuals of the regression and do it again against $X_2$
+### Partial Least Squares Method
+
+Difference to PCR: 
+
+-   It identifies the new features in a supervised way: 
+
+    - Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$ 
+    - Afterwhich take the residuals of the regression and do it again against $X_2$
 
 ```{r}
 set.seed(1)
@@ -1108,6 +1354,14 @@ mean((pls.pred-y[test])^2)
 pls.fitall <- plsr(Salary~., data=Hitters, scale=TRUE, ncomp=1)
 summary(pls.fitall)
 ```
+
+Comments:
+
+-   PLS seeks directions that have high variance and high correlation with the response while PCR seeks only the high variance direction
+
+-   PLS often performs no better than ridge regression or PCR
+
+-   PLS is likely to increase variance
 
 # Lesson 5: Classification
 
