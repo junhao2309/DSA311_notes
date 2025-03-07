@@ -3,7 +3,7 @@
 **Current Classwork Status:** Have yet to update answers from classwork 2
 
 Follow these steps for the Notes:
-1. Download the Notes.qmd file, Datasets and images and store it under 1 folder.
+1. Download the Notes.qmd file, full-width.css, Datasets and images and store it under 1 folder.
 2. Open the Notes.qmd file and render it to generate the html notes for easier referencing. (HTML notes makes the notes more readable and easier to reference from)
    - Note: You may need to download some packages to render. 
    
