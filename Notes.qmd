@@ -1,6 +1,6 @@
 ---
 title: "ML_Notes"
-number-sections: true
+number-sections: false
 format: 
   html:
     css: full-width.css
@@ -11,12 +11,12 @@ execute:
 editor: visual
 toc: true
 ---
+
 ```{r, echo=FALSE}
 library(emoji)
 ```
 
-
-# Lesson 1: Overview of SL & ML `r emoji::emoji("cats")`
+# **Lesson 1: Overview of SL & ML** `r emoji::emoji("cats")`
 
 ```{r, echo = FALSE}
 library(knitr)
@@ -239,30 +239,28 @@ lasso.m2[lasso.m2!=0]
 
 -   Testing Error for Classification
 
-    - False negative rate (FNR): Incorrectly assign a default individual to the no default category
-    - False positive rate (FPR): Incorrectly assign a no default individual to the default category
-    
+    -   False negative rate (FNR): Incorrectly assign a default individual to the no default category
+    -   False positive rate (FPR): Incorrectly assign a no default individual to the default category
+
 -   Confusion Matrix
-    
+
     -   Sensitivity: % of true defaulters that are identified as defaulters
     -   Specificity: % of true non-defaulters that are correctly identified as non-defaulters
 
-Formula:    
+Formula:\
 $$
 Sensitivity = \frac{Predicted \space Default}{Total \space no.\space of\space True \space Default}
-$$
-$$
+$$ $$
 Specificity = \frac{Predicted \space No \space Default}{Total \space no.\space of\space True \space No \space Default}
-$$
-![](images/Lesson1_img3.png)
+$$ ![](images/Lesson1_img3.png)
 
-# Lesson 2: Unsupervised Learning I `r emoji::emoji("dogs")`
+# **Lesson 2: Unsupervised Learning I** `r emoji::emoji("dogs")`
 
 -   Goals of Unsupervised learning
 
     -   Observe only the features, $X_1, X_2,..., X_p$
     -   Gather insights from the data and is not interested in prediction
-  
+
 ## Principal Components Analysis (PCA)
 
 -   What is it?
@@ -272,8 +270,7 @@ $$
     -   Reducing dimension comes at the expense of accuracy, but essentially to trade little accuracy for simplicity
     -   Low dimension data sets are easier to explore and visualize and makes analysing data points easier and faster for machine learning
 
-Below refers to the above point 2:
-$$
+Below refers to the above point 2: $$
 X_1, X_2, …, X_{1000}
 $$
 
@@ -283,8 +280,7 @@ $$
 
 $$
 Var(Y_1+Y_2) = Var(Y_1)+Var(Y_2)+2Cov(Y_1, Y_2)
-$$    
-
+$$
 
 **Applications of PCA**
 
@@ -296,51 +292,51 @@ Use the principal components:
 
 -   As predictors in a regression model, instead of original larger set of independent variables
 
-
 Mathematical Representation of PCA
 
 Each observation (X_1,X_2,...,X_p) is multiplied to the loading vector to obtain the scores, $Z$.
 
-Observations vector:
-$$
+Observations vector: $$
 X =
 \begin{bmatrix}
   X_1 & X_2 & ... & X_p
 \end{bmatrix}
 $$
 
-Loading vector:
-$$
-\phi_i = 
+Loading vector: \$\$ \phi\_i =
 
+```{=tex}
 \begin{bmatrix}
 \phi_{11} \\ \phi_{21} \\... \\ \phi_{p1}
 
 \end{bmatrix}
-$$
-The above creates a normalized linear combination of features:
+```
+\$\$ The above creates a normalized linear combination of features:
 
-$$
-Z=X\times\phi_i=
+\$\$ Z=X\times\phi\_i=
+
+```{=tex}
 \begin{bmatrix}
   X_1 & X_2 & ... & X_p
 \end{bmatrix} \begin{bmatrix}
 \phi_{11} \\ \phi_{21} \\... \\ \phi_{p1}
 
-\end{bmatrix} \\
+\end{bmatrix}
+```
+\\
 
-Z= \phi_{11}X_1+\phi_{21}X_2+...+\phi_{p1}X_p
+Z= \phi*{11}X_1+\*\phi{21}X_2+...+\phi\_{p1}X_p
 
+\$\$
 
-$$
+Under PCA, the objective is to minimise the perpendicular distance from the observation to the line.
+As such the distance of the line is maximised.
 
-Under PCA, the objective is to minimise the perpendicular distance from the observation to the line. As such the distance of the line is maximised.
-
-Goal: 
+Goal:
 
 $$
 \max{\frac{\sum^{n}_{i=1} Z_i^2} {n}}
-$$ 
+$$
 
 ### Second Prinipal Component
 
@@ -418,7 +414,6 @@ round(A2,2)
 round(A1A2, 2)
 ```
 
-
 From the above, we see that with PC1 and PC2, it gets closer to the original A matrix.
 
 Repeating the steps one more time.
@@ -442,7 +437,6 @@ A3
 round(A3,2)
 round(A1A2A3, 2)
 ```
-
 
 ## Proportion of Variance Explained (PVE)
 
@@ -558,14 +552,13 @@ Explanation of the graph above:
 
     -   The direction of an arrow shows how that variable influences the principal components.
     -   The length of an arrow indicates how strongly that variable contributes to the principal components.
-    
+
 -   Interpretation of Loading:
-    
+
     -   Murder, Assault, and Rape are pointing in the same general direction, meaning they are correlated.
         -   It suggest that Florida seems to have relately high values for Murder, Assault and Rape.
         -   The states on the left side have lower values for murder, assault and rape
     -   UrbanPop is pointing in a different direction, suggesting it has a different relationship with crime rates.
-
 
 ```{r}
 # Calculate and print the proportion of variance explained by each principal component
@@ -579,11 +572,11 @@ plot(pve, xlab = "Principal Component", ylab = "Proportion of Variance Explained
 plot(cumsum(pve), xlab = "Cumulative Principal Component", ylab = "Proportion of Variance Explained", ylim = c(0, 1), type = "b")
 ```
 
-# Lesson 3: Unsupervised Learning II `r emoji::emoji("fishes")`
+# **Lesson 3: Unsupervised Learning II** `r emoji::emoji("fishes")`
 
 ## Kmeans-clustering
 
-An approach for partitioning a dataset into $K$ distinct, non-overlapping clusters 
+An approach for partitioning a dataset into $K$ distinct, non-overlapping clusters
 
 -   Properties
 
@@ -591,30 +584,27 @@ An approach for partitioning a dataset into $K$ distinct, non-overlapping cluste
 
     -   Clusters are non-overlapping: No observation belongs to more than one cluster
 
--   Within Cluster Variation 
+-   Within Cluster Variation
 
 $$
 \min_{C_1,...,C_K} \{\sum^K_{k=1} WCV(C_k) \} 
-$$ 
+$$
 
 The formula above is to be solved such that the total within-cluster variation, summed over all $K$ clusters, is minimised.
 
--   Euclidean distance calculation: 
-    
+-   Euclidean distance calculation:
+
 $$
 WCV(C_k)= \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2
-$$ 
-where $|C_k|$ denotes the no. of obs in the $k$th cluster.
+$$ where $|C_k|$ denotes the no. of obs in the $k$th cluster.
 
 $(x_{ij}-x_{i'j})^2$ : Represents the distance between two observation
 
-Combining the two formulas above gives us: 
+Combining the two formulas above gives us:
 
 $$
 \min_{C_1,...,C_K} \{\sum^K_{k=1} \frac{1}{|C_k|} \sum_{i,i'\epsilon C_k} \sum^p_{j=1} (x_{ij}-x_{i'j})^2 \} 
-$$ 
-Can be simplied to: 
-$$
+$$ Can be simplied to: $$
 2\sum_{i\subset C_k}\sum^{p}_{j=1} (x_{ij}-\bar{x}_{kj})^2
 $$
 
@@ -679,7 +669,7 @@ We see that both formula yield the same total value.
 
 Visual Representation of the steps:
 
-![](images/Lesson3_img3.png) 
+![](images/Lesson3_img3.png)
 
 ### Example Code of the steps shown above
 
@@ -705,49 +695,68 @@ Total variation is reduced by 81.2% by clustering them.
 
 **Steps taken from the above example:**
 
-1.    Randomly placed with 2 clusters
+1.  Randomly placed with 2 clusters
 
-    -   Cluster 1: 
+```         
+-   Cluster 1: 
+```
+
 $$
 (12,17),\space (16,22)
 $$
-    
-    -   Cluster 2: 
+
+```         
+-   Cluster 2: 
+```
+
 $$
 (13,19),\space (11,20), \space (18,21)
 $$
-    
-2.    Calculate the centroid of each cluster
 
-    -   Cluster 1: 
+2.  Calculate the centroid of each cluster
+
+```         
+-   Cluster 1: 
+```
+
 $$
 [\frac{12+16}{2},\space \frac{17+22}{2}] = [14, 19.5]
 $$
-    
-    -   Cluster 2:
+
+```         
+-   Cluster 2:
+```
+
 $$
 [\frac{13+11+18}{3},\space \frac{19+20+21}{3}] = [14, 20]
 $$
 
-3.    Form the new cluster by comparing the distance from the centroid of each cluster
+3.  Form the new cluster by comparing the distance from the centroid of each cluster
 
-    -   New cluster 1: 
+```         
+-   New cluster 1: 
+```
+
 $$
 (12,17), (13,19)
 $$
-    
-    -   New cluster 2:
+
+```         
+-   New cluster 2:
+```
+
 $$
 (16, 22), (11,20), (18,21)
 $$
 
-From the above, we see that observation $(13,19)$ is closer to the centroid of cluster 1. Hence we bring that observation over. Similarly for observation $(16,22)$ where it is closer to the centroid of cluster 2. Hence we will bring that observation over.
+From the above, we see that observation $(13,19)$ is closer to the centroid of cluster 1.
+Hence we bring that observation over.
+Similarly for observation $(16,22)$ where it is closer to the centroid of cluster 2.
+Hence we will bring that observation over.
 
 The steps above will be repeated until no more changes can be made.
 
-
-**Below is how the variation is manually calculated.
-We can see that the end result is the same as the above**
+**Below is how the variation is manually calculated. We can see that the end result is the same as the above**
 
 ```{r}
 # Manual calculation of the variation:
@@ -776,10 +785,11 @@ ssg2
 # calculate the proportion of sum of squares explained by clusters
 1-(ssg1+ssg2)/sstot
 ```
-    
+
 ### Practical Application
 
 #### Initial Visualisation of PCA
+
 ```{r}
 score <- read.csv("Datasets/Score.csv", stringsAsFactors = TRUE)
 summary(score)
@@ -940,7 +950,7 @@ Note that under Dendrogram, the function *cutree(tree, cluster)* helps us cut th
 
 ```{r}
 dd <- as.dist(1-cor(t(super[,-1])))  # find the correlation-based distance
-
+dd
 kkc <- hclust(dd, method="complete")
 plot(kkc, main="Complete Linkage with Correlation-Based Distance",
      xlab="", sub="")  
@@ -985,9 +995,10 @@ cutree(gga, 3)
 2.  How many clusters should be used for K-means clustering
 3.  For hierarchical clustering, what dissimilarity measure, linkage and cutting point of the dendrogram should be used?
 
-# Lesson 4: Multiple Linear Regression `r emoji::emoji("rabbit")`
+# **Lesson 4: Multiple Linear Regression** `r emoji::emoji("rabbit")`
 
-## Basic theory of Regression Model 
+## Basic theory of Regression Model
+
 Note: (Refer to stat learning notes)
 
 $$
@@ -996,23 +1007,25 @@ Y = \beta_0 +\beta_1X_1
 $$
 
 -   Interpretation of coefficient
+
 -   Qualitative Variables
-    
+
     -   Refers to binary variables
-    
+
 -   Interaction variables
-    
+
     -   Refers to multiplying two variables together to create an interaction effect
-    
+
 -   Non-linear effects
-    
+
     -   Refers to the use of power terms in the regression to capture non-linear effects
-    
+
 ## Dimension Reduction
 
 ### Best subset approach
 
 Note: Taken from Stat learning with R
+
 ```{r}
 library(ISLR)
 library(leaps) # Subset package
@@ -1133,8 +1146,8 @@ coef(regfit3.all, d)
 :::
 
 ### Lasso / Ridge
-::: panel-tabset
 
+::: panel-tabset
 ### Lasso
 
 ```{r}
@@ -1175,6 +1188,7 @@ print(paste("Lasso RMSE: ", rmse.lasso))
 ```
 
 ### Ridge
+
 ```{r}
 # Load the necessary library
 library(ISLR)
@@ -1210,7 +1224,6 @@ mse.ridge <- mean((predictions.ridge - y)^2)
 rmse.ridge <- sqrt(mse.ridge)
 print(paste("Ridge RMSE: ", rmse.ridge))
 ```
-
 :::
 
 ### PCR regression
@@ -1231,6 +1244,7 @@ library(pls)
 blood <- read.csv("Datasets/BPressure.csv", stringsAsFactors = TRUE)
 cor(blood)
 ```
+
 From the above, we notice that there is high correlation between the features.
 
 -   Basic regression
@@ -1252,7 +1266,6 @@ lmpr <- lm(blood$BP~pr.out$x[,1]) # Using only the first principle component
 summary(lmpr)               
 ```
 
-
 -   The code below uses a predefined function for PCR.
 
 ```{r}
@@ -1262,7 +1275,8 @@ pcr.re1$fitted.values
 newx1 <- pcr.re1$scores # Obtains the principal component score
 ```
 
-Take the obtained principal score and do a regression with it. As shown below:
+Take the obtained principal score and do a regression with it.
+As shown below:
 
 ```{r}
 newx1
@@ -1286,9 +1300,7 @@ Cross compare between the regressions done above.
 
 #### Number of components vs Test MSE:
 
-The larger the number of components:
--   the **smaller** the **bias**
--   the **larger** the **variance**
+The larger the number of components: - the **smaller** the **bias** - the **larger** the **variance**
 
 To minimise the MSE in PCR, cross validation is used to determine the number of components.
 
@@ -1333,15 +1345,14 @@ pcr.fitall <- pcr(Salary~., data=Hitters, scale=TRUE, ncomp=5)
 summary(pcr.fitall)
 ```
 
-
 ### Partial Least Squares Method
 
-Difference to PCR: 
+Difference to PCR:
 
--   It identifies the new features in a supervised way: 
+-   It identifies the new features in a supervised way:
 
-    - Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$ 
-    - Afterwhich take the residuals of the regression and do it again against $X_2$
+    -   Take each variable of $X_1$ to regress onto each point of $Y_1$, to obtain the coefficient as $\hat{\beta}_{1,1} , \hat{\beta}_{1,2}, ...$
+    -   Afterwhich take the residuals of the regression and do it again against $X_2$
 
 ```{r}
 set.seed(1)
@@ -1369,21 +1380,18 @@ Comments:
 
 # Lesson 5: Classification `r emoji::emoji("sheep")`
 
-The theory for the multinomial logistic regression takes from the basic logistic regression. It uses the form:
+The theory for the multinomial logistic regression takes from the basic logistic regression.
+It uses the form:
 
 $$
 p(X) = \frac{e^{\beta_0+\beta_1 X}}{1+e^{\beta_0+\beta_1 X}}
-$$
-Rearranging the above gives:
+$$ Rearranging the above gives:
 
 $$
 log(\frac{p(X)}{1-p(X)}) = \beta_0 +\beta_1 X
-$$
-As the response variable is binary, we use the maximum likelihood function to estimate its parameters:
-$$
+$$ As the response variable is binary, we use the maximum likelihood function to estimate its parameters: $$
 l(\beta_0, \beta)= \prod_{i:y_i=1} p(x_i)\prod_{i:y_i=0} (1-p(x_i))
-$$
-The formula above has the same function type as your conditional probability equation.
+$$ The formula above has the same function type as your conditional probability equation.
 
 The above form is used when the response variable $Y$ is binary.
 
@@ -1399,9 +1407,10 @@ $$
 
 The slide below takes the third class, cc, as the baseline.
 
-![](images/Lesson5_img1.png) 
+![](images/Lesson5_img1.png)
 
 ### Code example
+
 ```{r}
 library(nnet)  # Package for neural networks and multinomial logistic regression
 library(broom) # Package for cleaning and structuring model outputs for easier interpretation
@@ -1409,9 +1418,11 @@ library(broom) # Package for cleaning and structuring model outputs for easier i
 mlr <- read.csv("Datasets/MLR.csv", stringsAsFactors = TRUE)
 summary(mlr)
 ```
+
 For this example, there are 3 classes, aa, bb and cc.
 
 -   Multinomial regression code
+
 ```{r}
 fit.mlr <- multinom(Y~., data=mlr)
 # summary(fit.mlr) # To get summary statistics
@@ -1425,16 +1436,18 @@ round(fit.mlr$fitted.values,3) # Gets the predicted probabilities for each class
 model <- predict(fit.mlr, mlr) # Gets the predicted classes
 model
 ```
+
 ```{r}
 # Compares the predicted classes and actual classes
 table(model, mlr$Y)
 ```
-row is predicted class while column is the true class
 
+row is predicted class while column is the true class
 
 -   When we want to calculate the probability of a certain class
 
 For example we take the 5th observation.
+
 ```{r}
 mlr[5,]
 ```
@@ -1454,7 +1467,6 @@ proaa
 probb
 procc
 ```
-
 
 ## Linear and Quadratic Discriminant Analysis
 
@@ -1476,19 +1488,17 @@ kable(data, caption = "Linear Discriminant Analysis Vs Logistic Regression")
 
 $$
 Pr(Y=k \space | \space X=x) = \frac{Pr(X=x \space | \space Y=k)\cdot Pr(Y=k)}{Pr(X=x)}
-$$
-Suppose that $F_1, F_2, ..., F_n$ are mutually exclusive & exhaustive events such that:
+$$ Suppose that $F_1, F_2, ..., F_n$ are mutually exclusive & exhaustive events such that:
 
 -   Exactly one of the events must occur
 -   Their union covers the entire sample space
 
-Now, suppose that event $E$ has occured and we are interested in determining which one of the $F_j$ also occured. By Bayes formula:
+Now, suppose that event $E$ has occured and we are interested in determining which one of the $F_j$ also occured.
+By Bayes formula:
 
 $$
 Pr(Y=F_j \space | \space X=E) = \frac{Pr(X=E \space | \space Y=F_j)\cdot Pr(Y=F_j)}{Pr(X=E)}
-$$
-Simplifying the notations above we have:
-$$
+$$ Simplifying the notations above we have: $$
 Pr(F_j \space | \space E) = \frac{Pr(E \space | \space F_j)\cdot Pr(F_j)}{Pr(X=E)}
 $$
 
@@ -1502,9 +1512,7 @@ Then:
 
 $$
 P(E) = \sum^n_{i=1} P(EF_i)=\sum^n_{i=1} P(F_i) \times P(E\space | \space F_i)
-$$
-The above formula is derived from the probability formula: (Event $E$ intersects event $F_i$)
-$$
+$$ The above formula is derived from the probability formula: (Event $E$ intersects event $F_i$) $$
 P(A \cap B)=P(A|B)\cdot P(B)
 $$
 
@@ -1518,13 +1526,12 @@ The general formula for discriminant analysis is:
 
 $$
 Pr(Y=k \space | \space X=x)=\frac{\pi_kf_k(x)}{\sum^K_{l=1} \pi_lf_l(x)}
-$$
-where:
+$$ where:
 
 -   $f_k (x) = Pr(X=x \space | \space Y=k)$ is the **density** for $X$ in class $k$.
 -   $\pi_k = Pr(Y=k)$ is the marginal or prior probability for class $k$
 
-![](images/Lesson5_img3.png) 
+![](images/Lesson5_img3.png)
 
 For $\pi = 0.5, \pi_2=0.5$,
 
@@ -1546,8 +1553,7 @@ The Gaussian density has the form:
 
 $$
 f_k(x) = \frac{1}{\sqrt{2\pi} \sigma_k}e^{-\frac{1}{2}(\frac{x-\mu_k}{\sigma_k})^2}
-$$
-where:
+$$ where:
 
 -   $\mu_k$: mean of class $k$
 -   $\sigma_k^2$: variance of class $k$ $\rightarrow$ We assume all class share the same variance, $\sigma_k = \sigma$.
@@ -1562,48 +1568,43 @@ From the above formula, by taking logs and discarding terms that do no depend on
 
 $$
 \delta_k(x) = x\cdot \frac{\mu_k}{\sigma^2}-\frac{\mu_k^2}{2\sigma^2}+log(\pi_k)
-$$
-Essentially, we see that $\delta_k(x)$ is a linear function of x.
+$$ Essentially, we see that $\delta_k(x)$ is a linear function of x.
 
-Example:
-If there are 2 classes $(K=2)$ and there is balanced classification $(\pi_1=\pi_2 =0.5)$, then the decision boundary is at :
+Example: If there are 2 classes $(K=2)$ and there is balanced classification $(\pi_1=\pi_2 =0.5)$, then the decision boundary is at :
 
 $$
 x = \frac{\mu_1+\mu_2}{2}
 $$
 
-![](images/Lesson5_img4.png) 
+![](images/Lesson5_img4.png)
 
 **Estimation of Parameters**
 
 Typically the parameters $(\mu_i , \pi_i, \sigma^2)$ are unknown and therefore we will need to estimate them.
 
-$$
-\hat{\pi}_k= \frac{n_k}{n} \\
+\$\$ \hat{\pi}\_k= \frac{n_k}{n} \\
 
-\hat{\mu}_k = \frac{1}{n_k} \sum_{i: y_i=k} x_i \\
+\hat{\mu}*k =* \frac{1}{n_k} \sum{i: y_i=k} x_i \\
 
-\hat{\sigma} = \frac{1}{n-K}\sum^K_{k=1} \sum_{i: y_i=k} (x_i-\hat{\mu}_k)^2 = \sum^K_{k=1} \frac{n_k-1}{n-K}\cdot \hat{\sigma}_k^2
-$$
-where:
+\hat{\sigma} = \frac{1}{n-K}\sum\^K\_{k=1} \sum\_{i: y_i=k} (x_i-\hat{\mu}*k)\^2 =* \sum\^K{k=1} \frac{n_k-1}{n-K}\cdot \hat{\sigma}\_k\^2 \$\$ where:
 
 -   $n_k$: no. of observations in a particulas class, $k$
 -   $n$: Total no. of observation
 
 For each value of $Y$, we take the mean,$\mu_i$ of the $X$ features and its $\sum_i$
 
-![](images/Lesson5_img5.png) 
-**This chapter is actually giving me a headache** `r emoji::emoji("clown")``r emoji::emoji("clown")``r emoji::emoji("clown")`
+![](images/Lesson5_img5.png) **This chapter is actually giving me a headache** ``` r emoji::emoji("clown")``r emoji::emoji("clown")``r emoji::emoji("clown") ```
 
 `r emoji::emoji("cry")`
 
-![](images/Lesson5_img6.png) 
+![](images/Lesson5_img6.png)
 
-![](images/Lesson5_img7.png) 
+![](images/Lesson5_img7.png)
 
 #### LDA Coding
 
 -   Understanding the dataset
+
 ```{r}
 library(ISLR2)
 library(MASS) 
@@ -1612,6 +1613,7 @@ dim(Smarket)
 ```
 
 -   Train test split
+
 ```{r}
 train <- (Smarket$Year <2005)
 SMtrain <- Smarket[train,]
@@ -1620,6 +1622,7 @@ dim(SMtest)
 ```
 
 -   Perform LDA
+
 ```{r}
 y.test <- SMtest$Direction
 lda.fit <- lda(Direction ~Lag1 +Lag2, data=Smarket, subset=train)
@@ -1630,6 +1633,7 @@ plot(lda.fit)
 We see that the plot above approximately supports normal distribution assumption
 
 -   Verify Class Probabilities and mean
+
 ```{r}
 up <- SMtrain$Direction == "Up"  # Boolean vector for "Up" days
 probup <- length(SMtrain$Direction[up]) / length(SMtrain$Direction)  # P(Up)
@@ -1643,6 +1647,7 @@ mean(SMtrain$Lag2[up])   # Mean Lag2 for "Up" class
 ```
 
 -   Make predictions on the Test set
+
 ```{r}
 lda.pred <- predict(lda.fit, SMtest)
 lda.class <- lda.pred$class
@@ -1667,6 +1672,7 @@ kable(data, caption = "Linear Discriminant Analysis Vs Quadratic Discriminant An
 ```
 
 #### Performing QDA
+
 ```{r}
 library(ISLR2)
 library(MASS) 
@@ -1679,32 +1685,32 @@ table(qda.class, y.test)
 qda.pred$posterior 
 ```
 
-# Lesson 6: Support Vector Machines `r emoji::emoji("horses")`
+# **Lesson 6: Support Vector Machines** `r emoji::emoji("horses")`
 
-A hyperplane has the form: 
+A hyperplane has the form:
 
 $$
 \beta_0+\beta_1X_1+\beta_2X_2 +... +\beta_pX_p=0
-$$ 
+$$
 
 -   Has a subspace of dimension $p-1$ where $p$ is the number of features
 
-![](images/Lesson6_img1.png) 
+![](images/Lesson6_img1.png)
 
 The above graph showcases a one dimensional plane.
 A vertical line (hyperplane) can be drawn to separate the blue and red dots.
 
 -   Ideally the distance from the blue dot to the line and the distance from the red dot to the line should be approximately equal. (See topic on margin)
 
-![](images/Lesson6_img2.png) 
+![](images/Lesson6_img2.png)
 
-Example: The hyperplane separates the points: 
+Example: The hyperplane separates the points:
 
--   For the blue line, any point on the right is positive while any point on the left is negative 
+-   For the blue line, any point on the right is positive while any point on the left is negative
 
 $$
 -6+0.8X_1+0.6X_2=0
-$$ 
+$$
 
 Looking at Points (7,4) and (2,5), Sub in the points into the above equation
 
@@ -1715,7 +1721,7 @@ Looking at Points (7,4) and (2,5), Sub in the points into the above equation
 
 ## Separating Hyperplane
 
-![](images/Lesson6_img3.png) 
+![](images/Lesson6_img3.png)
 
 Ensure that all purple points are more than 0.
 Any deviations would suggest misclassification aka, the hyperplane did not properly separate the two $Y$ observations.
@@ -1729,7 +1735,7 @@ Any deviations would suggest misclassification aka, the hyperplane did not prope
 
 -   Maximise the margin (biggest gap) between the two classes
 
-![](images/Lesson6_img4.png) 
+![](images/Lesson6_img4.png)
 
 The points that results in a distance within the margin is not that important.
 
@@ -1744,7 +1750,7 @@ More often, data points generally do not allow for a clean separation.
 
 This is where we use support vector classifier that maximises a soft margin.
 
-![](images/Lesson6_img5.png) 
+![](images/Lesson6_img5.png)
 
 -   This allows for some misclassification that maximises the margin.
 -   If a hard margin is wanted, one will have to sacrifise for a smaller margin.
@@ -1761,9 +1767,10 @@ This is where we use support vector classifier that maximises a soft margin.
 
 ![](images/Lesson6_img8.png)
 
-From the graph above: 
+From the graph above:
+
 -   $\epsilon_i=0$: 2, 3, 4, 5, 6,7, 9, 10
--   $0<\epsilon_i<1$: 1, 8 
+-   $0<\epsilon_i<1$: 1, 8
 -   $\epsilon_i>1$: 11, 12
 
 Support vectors are: 2, 7, 9
@@ -1771,19 +1778,12 @@ Support vectors are: 2, 7, 9
 **Budget C**
 
 -   C controls the bias-variance trade-off of the statistical learning technique.
--   When C is small, we seek narrow margins that are rarely violated; this amount to a classifier that is
-highly fit to the data
--   When C is larger, the margin is wider, and we allow more violations to it. This amount to more bias
-and less variance
--   Note that observation that lies strictly on the correct side of the margin does not affect the support
-vector classifier! Only support vectors (lying directly on the margin, or on the wrong side of the
-margin) do!
--   The support vector classifier’s decision rule is based on only on a potentially small subset of the
-training observations. That means it is quite robust to the behavior of observations that are far
-away from the hyperplane.
+-   When C is small, we seek narrow margins that are rarely violated; this amount to a classifier that is highly fit to the data
+-   When C is larger, the margin is wider, and we allow more violations to it. This amount to more bias and less variance
+-   Note that observation that lies strictly on the correct side of the margin does not affect the support vector classifier! Only support vectors (lying directly on the margin, or on the wrong side of the margin) do!
+-   The support vector classifier's decision rule is based on only on a potentially small subset of the training observations. That means it is quite robust to the behavior of observations that are far away from the hyperplane.
 
-**Why variance is reduced when C is bigger?**
-Since the margin is much wider, this means more observations becomes the support vector.
+**Why variance is reduced when C is bigger?** Since the margin is much wider, this means more observations becomes the support vector.
 If any one of the observation changes, it has little impact on the hyperplane as compared to when there is only two support vector.
 
 **CODING FOR SVM**
@@ -1935,7 +1935,7 @@ K(x_i, x_i')=(1+\sum^p_{j=1} x_{ij}x_{i'j})^d
 $$
 
 -   d=1, it is standard linear kernel
--   d>1, it fits a SVC in a higher dimensional space.
+-   d\>1, it fits a SVC in a higher dimensional space.
 
 ## Radial Kernel
 
@@ -1945,14 +1945,13 @@ $$
 
 $$
 f(x)=\beta_0 +\sum_{i\subset S} \hat{\alpha}_iK(x,x_i)
-$$ 
-This Kernel is more concern about the squared distance between two observation.
+$$ This Kernel is more concern about the squared distance between two observation.
 
 -   Thereby controls variance by reducing most dimensions severely
 
-![](images/Lesson6_img10.png) 
+![](images/Lesson6_img10.png)
 
-![](images/Lesson6_img11.png) 
+![](images/Lesson6_img11.png)
 
 -   R function svm() will perform multi-class classification using OVO.
 
@@ -1997,6 +1996,151 @@ bestmod1 <- tune.out$best.model
 pred1 <- predict(bestmod1, newdata=dat[-train,])
 table(true=dat[-train, "y"], pred1)
 ```
+
+
+# **Lesson 7: SVM 2, Naive Bayes Classifer & K-Nearest Neighbors Classifier**
+
+## SVM 2: 
+
+-   **SVM 2 is put together with Lesson 6 SVM part**
+
+## Naive Bayes Classifier (NBC)
+
+-   Apply Bayes theorem to classification problem
+-   Assume features are independent & equally important within each class
+-   Useful when no. of independent variables, $p$ is large
+
+### Theory
+
+-   Generalized Multiplication Rule of Probability
+
+If $E_1, E_2, E_3$ are any arbitrary sets of events then the probability of all events happening is:
+
+$$
+P(E_1E_2E_3)=P(E_1)\times P(E_2 |E_1)\times P(E_3|E_1E_2)
+$$
+
+Hence, considering $E_1,E_2,...,E_n$ are any arbitrary sets of events, then in general form:
+
+$$
+P(E_1E_2...E_n) = P(E_1) \times P(E_2|E_1) \times P(E_3|E_1E_2)\times ...\times P(E_n|E_1E_2...E_{n-1})
+$$
+
+-   NBC Assumptions (To add in during lecture)
+
+### Summary
+
+-   NBC is simple, fast and effective despite relying on often-faulty assumptions
+
+-   Perform well with noisy data
+
+-   Require relatively few examples for training but also works well with large numbers of example
+
+-   Ideal for datasets with many qualitative independent variables
+
+
+
+## K-Nearest Neighbors Classifer
+
+
+### Similarity and distances
+
+-   Euclidean distance
+
+    -   Defined as the straight-line distance between two points in a plane or space
+
+$$
+d(x, X_i)=\sqrt{\sum^d_{j=1}(x_j-X_{i_j})^2}
+$$
+
+-   Manhattan Distance
+
+    -   Defined as the total distance you would travel if you could move along horizontal & vertical lines (Like in a grid)
+    
+$$
+d(x,y)=\sum^n_{i=1} |x_i-y_i|
+$$
+
+-   Minkowski Distance
+
+    -   Defined as a family of distances which includes both Euclidean and Manhattan distances as special cases
+    
+$$
+d(x,y)=(\sum^n_{i=1}(x_i-y_i)^p)^{\frac{1}{p}}
+$$
+
+### Steps of KNN Classifer
+
+1.    Select the optimal value of K
+
+2.    Calculate distance
+
+      -   To measure the similarity between target and training data points, Euclidean distance is used.
+      -   Distance between data points in the dataset and the target point is calculated
+      
+3.    Finding nearest neighbors
+
+      -   K data points with the smallest distances to the target point are the nearest neighbors
+      
+4.    Voting for classification
+      
+      -   These closest points are called neighbors. The algorithm then looks at which category the neighbors belong to and picks the one that appears the most (Majority vote).
+      
+Note: Since algorithm relies on distance, scaling (normalising) the training data can greatly improve its accuracy
+
+### Numerical example
+
+### Summary
+```{r, echo = FALSE}
+library(knitr)
+
+# Create a data frame
+data <- data.frame(
+  Advantages = c("Easy to implement as complexity is relatively low as compared to other ML algorithm", "Stores all data in memory and doesn't require any training such that when new data points are added, it automatically adjust and uses the new data for future predictions", "Few hyperparameters are required in the training of KNN", "Works for both classification and regression"),
+  Disadvantages = c("Doesn't scale well with large datasets", 
+                    "As the number of features increases, KNN struggles to classify data accurately (Curse of dimensionality)", "Prone to overfitting due to the curse of dimensionality", "-")
+)
+
+# Create a table
+kable(data, caption = "Advantages & Disadvantages of KNN")
+```
+
+
+# **Lesson 8: Moving Beyond Linearity**
+
+## Polynomial regression
+
+-   Add extra predictors by raising the existing predictors to a power
+
+## Step functions
+
+-   Cut the range of a variable into K distinct regions and then fit a piecewise constant function
+
+
+
+## Regression splines
+
+-   Use polynomial regression and step techniques together
+
+## Local regression
+
+-   Similar to splines but regions are allowed to overlap
+
+## Generalize additive models (GAM)
+
+-   Extend above techniques to deal with multiple predictors
+
+
+# **Lesson 9**
+
+
+
+# **Lesson 10**
+
+
+
+
+
 
 
 

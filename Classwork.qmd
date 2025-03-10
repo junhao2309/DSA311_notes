@@ -21,7 +21,7 @@ toc: true
 ### (a)
 
 ```{r}
-df <- read.csv("Datasets/Clementi2025C.csv")
+df <- read.csv("Datasets/Clementi2025C.csv", stringsAsFactors = TRUE)
 
 #(a)
 M1 <- lm(Price~., 
@@ -66,125 +66,112 @@ predict(M2, data.frame(Size=75, Story=6, Model = "New Generation", LeaseRemain=6
 
 ### (f)
 
-```{r}
-# (f) 
+Answer: Since the coefficient estimate of Story and Story^2 are 4737 and -59.9, respectively, the higher Story implies higher price, all else being equal.  But the price increases in the decreasing rate as the quadratic term coefficient is negative.  (Note that the turning point of the curve is at Story equal to 39 which is higher than the maximum of the variable in the data set.) 
 
-# Answer: Story has a positive relationship with the price
-```
 
 ## Question 2: Basic ridge/lasso CV + Bagging
 
 ![](CW_images/CW1_Q2.png)
 
-### (a)
-
 ```{r}
+credit <- read.csv("Datasets/Credit2025C.csv", stringsAsFactors = TRUE)
+
 library(glmnet)
-df <- read.csv("Datasets/Credit2025C.csv")
-
 set.seed(6677)
-x <- model.matrix(Balance~., df)[,-1]
-y <- df$Balance
-grid <- 10^seq(10, -2, length=100)
-set.seed(1)
-train <- sample(1:nrow(x), 330) 
 
-test <- (-train)  # the rest as testing set
-y.test <- y[test]
-y.train <- y[train]
+## Train test split
+train <- sample(1:nrow(credit), 330)
+test <- -train
+credit.train <- credit[train,]
+credit.test <- credit[test,]
+
+train.x <- model.matrix(Balance~., data=credit.train)[,-1]
+train.y <- credit.train$Balance
+test.x <- model.matrix(Balance~., data=credit.test)[,-1]
+test.y <- credit.test$Balance
 
 # (a)
-R1 <- glmnet(x[train,], y[train], alpha=0)
-cvrr.out <- cv.glmnet(x[train,], y[train], alpha=0)
-bestlam <- cvrr.out$lambda.mi
-bestlam
+# ridge regression
+ridge.mod <- cv.glmnet(train.x, train.y, alpha=0)
+lambda.rr <- ridge.mod$lambda.min
+lambda.rr
+ridge.pred <- predict(ridge.mod, newx=test.x, s=lambda.rr)
+# ridge regression test MSE
+mse.rr <- mean((test.y-ridge.pred)^2)
+mse.rr
 
-ridge.pred <-predict(R1, s=bestlam, newx=x[test,])  
-mean((ridge.pred-y[test])^2)  # obtain the MSE from the test set
+# (b)
+lasso.mod <- cv.glmnet(train.x, train.y, alpha=1)
+lambda.lasso <- lasso.mod$lambda.min
+lambda.lasso
+lasso.pred <- predict(lasso.mod, newx=test.x, s=lambda.lasso)
 
-# Answer: Best lambda = 40.05347, Test MSE = 15357.77
-```
+mse.lasso <- mean((test.y-lasso.pred)^2)
+mse.lasso
 
-### (b)
-
-```{r}
-set.seed(6677)
-R2 <- glmnet(x[train,], y[train], alpha=1)
-cvvr.out <- glmnet(x[train,], y[train], alpha=1, lambda=grid)
-cvrr.out <- cv.glmnet(x[train,], y[train], alpha=1)
-bestlam <- cvrr.out$lambda.mi
-bestlam
-
-lasso.pred <-predict(R2, s=bestlam, newx=x[test,])  
-mean((lasso.pred-y[test])^2)  # obtain the MSE from the test set
-
-# Answer: Best lambda = 1.655014, Test MSE = 11042.16
-```
-
-### (c)
-
-```{r}
+# (c)
 library(randomForest)
-set.seed(6677)
-train <- sample(nrow(df), 330)
-df_train <- df[train,]
-df_test <- df[-train,]
+bag.credit <- randomForest(Balance~.,
+ data=credit,
+ subset=train, mtry=7) #using bagging
+bag.credit
+yhat.bag <- predict(bag.credit, newdata=credit.test)
+#MSE for bagging
+mse.bag <- mean((yhat.bag- credit.test$Balance)^2)
+mse.bag
 
-R3 <- randomForest(Balance~.,
-                   data=df,
-                   subset=train, 
-                   mtry=7, importance=TRUE) #using bagging with training data
+# (d)
+#using random forest
+rf.credit <- randomForest(Balance~.,
+ data=credit,
+ subset=train, mtry=3) #using random forest
+rf.credit
+yhat.rf <- predict(rf.credit, newdata=credit.test)
+#MSE for random forest
+mse.rf <- mean((yhat.rf- credit.test$Balance)^2)
+mse.rf
 
-yhat.bag <- predict(R3, newdata=df_test)
-mean((yhat.bag-df_test[,"Balance"])^2)
+# (e)
+# use all data to construct the model with LASSO approach
+x <- model.matrix(Balance~., data=credit)[,-1]
+y <- credit$Balance
 
-# Answer: Test MSE: 8598.558
+lasso.all <- glmnet(x, y, alpha=1)
+lasso.coef <- predict(lasso.all, type="coefficients", s=lambda.lasso)[1:8,]
+lasso.coef[lasso.coef !=0]
+yhat <- predict(lasso.all, s=lambda.lasso, newx=x)[1:5]
+error <- yhat-y[1:5]
+y[1:5]
+yhat
+error
 ```
 
-### (d)
+Answer:
 
-```{r}
-library(randomForest)
-set.seed(6677)
-train <- sample(nrow(df), 330)
-df_train <- df[train,]
-df_test <- df[-train,]
+(a) MSE1=13141.49; lambda=39.06409
+(b) MSE2=7071.47; lambda= 0.7668
+(c) MSE3=8811.42
+(d) MSE4=11961.33
+(e) Lasso model is the recommended model as it has smallest MSE of 8811.42
 
-R4 <- randomForest(Balance~.,
-                   data=df,
-                   subset=train, 
-                   mtry=3, importance=TRUE) #using bagging with training data
+(Intercept): -512.0792119
 
-yhat.bag <- predict(R4, newdata=df_test)
-mean((yhat.bag-df_test[,"Balance"])^2)
+Income: -7.8368385
 
-# Answer: Test MSE: 11909.35  
-```
+Limit: 0.1265155
 
-### (e)
+Rating: 2.0966366
 
-```{r}
-library(randomForest)
-set.seed(6677)
+OwnYes: -5.1476985
 
-final_model <- randomForest(Balance~.,
-                   data=df,
-                   mtry=7, importance=TRUE) #using bagging with training data
-final_model
-# Answer: I would choose the bagging model in part (c) as it has the lowest test MSE
-```
+StudentYes: 418.8716851
 
-### (f)
+MarriedYes: -6.5196042
 
-```{r}
-df_5obs = df[1:5,]
-df_5obs
+RegionSouth: 7.4614610
+          
 
-yhat.bag <- predict(R4, newdata=df_5obs)
-yhat.bag
-
-# All predictions overestimates the actual value of the 5 entries
-```
+(f) The predicted values of the first five observations are 422, 940, 650, 962 and 419 respectively. The model under-estimates the fourth observation and over-estimates the rest.
 
 # Classwork 2
 
@@ -202,28 +189,56 @@ M
 X <- scale(M)  
 sX <- svd(X) # do SVD
 
-d <- sX$d
-U <- sX$u
+# Loading score of principal component
 V <- sX$v
-D <- diag(d)
+round(V,4)
+
+# Principal component scores
+pcss <- X%*%V
+pcss
+
+# Proportion of variance explained
+totalsum <-sum(pcss^2)
+pc1sum <-sum(pcss[,1]^2)
+pc2sum <-sum(pcss[,2]^2)
+propvar1 <-pc1sum/totalsum
+propvar2 <-pc2sum/totalsum
+propvar1
+propvar2
 
 
-pcs <- U %*% D
-pcs
+# (b)
 
-# Answer: First principal component for each of the 5 observation: -2.34267393, -0.65362068, 1.83002396, 0.06824995, 1.09802070
-#         Second principal component for each of the 5 observation: -0.8709509, 1.5237422, 0.1363334, 0.4150659, -1.2041906
+pres <-prcomp(M, scale=TRUE)
+summary(pres)
+
+# Gives you the loading score ofeach principal component
+pres$rotation
+
+# Gives you the principal component score for each observation
+pres$x
+
 ```
 
-### (b)
+Answer: 
 
-```{r}
-# Using pcob
-pcob <- prcomp(M, scale=TRUE)  # use R function prcomp, with scaling
-                               # Use scaling when the features are very different
+(a)
 
-pcob$x 
-```
+-   The loadings of the first principal component are -0.5742, -0.4595, 0.6085, and -0.2981. The loadings of the second principal component are -0.1583, 0.5929, -0.0861, and -0.7849.
+
+-   The proportion of variance explained by the first principal component is 65.47%. The proportion of variance explained by the second principal component is 29.51%.
+
+-   The first and second principal component scores for the first observation are -2.342 and -0.871, respectively.
+
+-   The first and second principal component scores for the second observation are -654 and 1.524, respectively.
+
+-   The first and second principal component scores for the third observation are 1.830 and 0.136, respectively.
+
+-   The first and second principal component scores for the fourth observation are 0.068and 0.415, respectively.
+
+-   The first and second principal component scores for the fifth observation are 1.098and -1.204, respectively
+
+(b) Gives the same score as seen on the output.
 
 ## Question 2:
 
@@ -234,66 +249,50 @@ pcob$x
 ```{r}
 df <- read.csv("Datasets/Auto2025C.csv")
 
+# (a)
 # Perform PCA on the scaled data
 pr.out <- prcomp(df, scale = TRUE)
 pr.out$rotation[,1]  # PC1 loadings
 
-# Answer: PC1:    mpg      cylinders   displacement   horsepower    weight      acceleration 
-#              0.3989731   -0.4306152   -0.4435314   -0.4341217   -0.4301031    0.2919257
-```
 
-### (b)
-
-```{r}
+# (b)
 pr.out$rotation[,2]  # The rotation (loading of each variable on the principal components)
 
-# Answer: PC2:    mpg      cylinders  displacement   horsepower     weight    acceleration 
-#              0.2448345   -0.1483141   -0.1084971    0.1661584   -0.2860955   -0.8926523 
-```
-
-### (c)
-
-```{r}
+# (c)
 biplot(pr.out, scale = 0, main = "The first two Principal Components")
-```
 
-### (d)
+# (g)
+# Proportions of variation explained
+pr.var <-pr.out$sdev^2
+pve <-pr.var/sum(pr.var)
+pve 
+par(mfrow=c(1,2))
+plot(pve, xlab="Principal Component", ylab="Proportion of Variance Explained",ylim=c(0,1), type="b")
+plot(cumsum(pve), xlab="Cumulative Principal Component",ylab="Proportion of Variance Explained",ylim=c(0,1), type="b" )
 
-```{r}
-# Answer: Loading value for variable, cylinders on PC1 is -0.4306152
-#         Loading value for variable, cylinders on PC2 is -0.1483141
-```
-
-### (e)
-
-```{r}
-# Cylinders and displacement are highly correlated as they are going in the same direction
-```
-
-### (f)
-
-```{r}
-# The 27th observation has an approximate first principal component score of -3.8 and an approximate second principal component score of -0.8
-```
-
-### (g)
-
-```{r, eval = FALSE}
-plot(pve, xlab = "Principal Component", ylab = "Proportion of Variance Explained", ylim = c(0, 1), type = "b")
-```
-
-### (h)
-
-```{r}
-# Calculate and print the proportion of variance explained by each principal component
-pr.var <- pr.out$sdev^2
-pve <- pr.var/sum(pr.var)
-
-Information_loss = sum(pve[3:length(pve)])
+# (h)
+Information_loss = 1- sum(pve[1:2])
 Information_loss
-
-# Answer: 0.08051712
 ```
+
+Answer:
+
+(a) PC1: The loadings are 0.3989731, -0.4306152, -0.4435314, -0.4341217, -0.4301031, 0.2919257
+
+(b) PC2: The loadings are 0.2448345, -0.1483141, -0.1084971,0.1661584, -0.2860955 and -0.8926523
+
+(c) Refer to output
+
+(d) Loading value for variable, cylinders on PC1 is -0.4306152
+Loading value for variable, cylinders on PC2 is -0.1483141
+
+(e) Cylinders and displacement are highly correlated as they are going in the same direction and are close to each other.
+
+(f) The 27th observation has an approximate first principal component score of -3.646 and an approximate second principal component score of -0.642
+
+(g) The proportions of variance explained by the six principal components are 0.79804436 0.12143852 0.04307789 0.02086284,0.01052940 and 0.00604700.
+
+(h) 8.05% of information is lost
 
 # Classwork 3
 

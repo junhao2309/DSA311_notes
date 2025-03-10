@@ -1,0 +1,35 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(glmnet)
+df <- read.csv("Datasets/Credit2025C.csv")
+
+set.seed(6677)
+x <- model.matrix(Balance~., df)[,-1]
+y <- df$Balance
+train <- sample(1:nrow(x), 330) 
+test <- (-train)  # the rest as testing set
+y.test <- y[test]
+y.train <- y[train]
+
+# (a)
+R1 <- cv.glmnet(x[train,], y[train], alpha=0)
+bestlam <- R1$lambda.min
+bestlam
+
+ridge.pred <-predict(R1, s=bestlam, newx=x[test,])  
+mean((ridge.pred-y[test])^2)  # obtain the MSE from the test set
+
+# (b)
+L1 <- cv.glmnet(x[train,], y[train], alpha=1)
+bestlam <- L1$lambda.min
+bestlam
+
+lasso.pred <-predict(L1, s=bestlam, newx=x[test,])  
+mean((y[test]-lasso.pred)^2)  # obtain the MSE from the test set
+```
+
+
