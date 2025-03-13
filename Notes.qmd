@@ -325,7 +325,7 @@ Loading vector: \$\$ \phi\_i =
 ```
 \\
 
-Z= \phi*{11}X_1+\*\phi{21}X_2+...+\phi\_{p1}X_p
+Z= \phi\*{11}X_1+\*\phi{21}X_2+...+\phi\_{p1}X_p
 
 \$\$
 
@@ -1378,7 +1378,7 @@ Comments:
 
 -   PLS is likely to increase variance
 
-# Lesson 5: Classification `r emoji::emoji("sheep")`
+**# Lesson 5: Classification** `r emoji::emoji("sheep")`
 
 The theory for the multinomial logistic regression takes from the basic logistic regression.
 It uses the form:
@@ -1854,18 +1854,27 @@ svm2$fitted
 
 Purpose: To address **non-linearity** in the model - Enlarge Features with Polynomial Functions - Enlarge the feature space by including quadratic/cubic polynomials.
 
--   Inner Product: Takes the sum of point coordinates $$
-    (x_i, x_i')=\sum^{p}_{i=1} x_{ij}x_{i'j}
-    $$ For example: $X_1: 4, 7, 6, 9$ $X_2: 2, 5, 4, 6$
+
+
+## Linear Kernel
+
+-   Quantifies the similarity of the two observations
+
+-   Inner Product: Takes the sum of point coordinates 
+
+$$
+K(x_i, x_i')=\sum^{p}_{j=1} x_{ij}x_{i'j}
+$$ 
+
+For example: $X_1: 4, 7, 6, 9$ $X_2: 2, 5, 4, 6$
 
 $(x_i, x_i')= 4\times2+7\times5+6\times4+9\times6$
 
 $$
 f(x)=\beta_0 +\sum^{n}_{i=1} \alpha_i(x,x_i)
-$$ Most $\alpha$s can be zero as the observation that are away from the separation line do not contribute much to the parameters.
+$$ 
 
--   Linear Kernel
-    -   Quantifies the similarity of the two observations
+Most $\alpha$s can be zero as the observation that are away from the separation line do not contribute much to the parameters.
 
 ## Numeric Example 2:
 
@@ -1923,6 +1932,8 @@ testdat <- data.frame(x=xtest, y=as.factor(ytest))
 ypred <- predict(bestmod, testdat)
 table(predict=ypred, truth=testdat$y)
 ```
+
+
 
 ## Polynomial Kernel
 
@@ -1997,10 +2008,117 @@ pred1 <- predict(bestmod1, newdata=dat[-train,])
 table(true=dat[-train, "y"], pred1)
 ```
 
+## Numeric Example 4: (To look into the manual calculation again)
+```{r}
+# Support Vector Classifier Example
+y <- c(rep("aa", 5), rep("bb", 7))
+y1 <- c(rep(-1,5), rep(1,7))
+x1<- c(2,1,5,6,4,6,3,5,8,6,5,9)
+x2 <-c(5,3,4,1,2,8,8,9,7,6,7,3)
+ss<- c(rep(1,5), rep(2,7))
+plot(x2,x1, col=ss+1, cex=1.5)
+dd4 <- data.frame(y, x1, x2, stringsAsFactors = TRUE)
+dd4
+library(e1071)
+svm1 <- svm(y~x1+x2, data=dd4, kernel="linear", cost=1000, scale=FALSE)
+plot(svm1,dd4)
+svm1
+svm1$index
+dd4[svm1$index,]
+```
+The above table forms the equations for the support vector hyperplane:
+
+support vectors (5, 4) (3, 8), (9, 3) all on the margin
+
+$$ 
+a+bx_1+cx_2=0 \\
+
+a+5b+4c=-m \\
+
+a+3b+8c=m \\
+
+a+9b+3c=m \\
+
+bb+cc=1 \\
+$$
+
+```{r}
+c <- sqrt(1/((5/6)^2+1))
+b <- 5/6*c
+b^2+c^2
+a <- -(8*b+12*c)/2
+m <- a+3*b+8*c
+c(m, a, b, c)
+# when cost=1000
+# margin=0.8962582, -7.170065+0.6401844X1+0.7682213X2=0
+objf1 <- 1/m+1000*0
+objf1
+```
+
+
+```{r}
+#Cost =0.2
+svm2 <- svm(y~x1+x2, data=dd4, kernel="linear", cost=.2, scale=FALSE)
+plot(svm2,dd4)
+svm2
+svm2$index
+dd4[svm2$index,]
+# support vectors (2, 5) (3, 8), (9, 3) on the margin and
+# support vector (5,4) in the wrong side of margin
+# a+b*x1+c*x2=0
+# a+2b+5c=-m
+# a+3b+8c=m
+# a+9b+3c=m
+# b*b+c*c=1
+c <- sqrt(1/((5/6)^2+1))
+b <- 5/6*c
+b^2+c^2
+a <- -(5*b+13*c)/2
+m <- a+3*b+8*c
+c(m, a, b, c)
+# when cost=0.2
+# margin=1.472424, -6.593899+0.6401844X1+0.7682213X2=0
+mm1 <- (a+2*b+5*c)*y1[svm2$index[1]]
+mm2 <- (a+5*b+4*c)*y1[svm2$index[2]]
+mm3 <- (a+3*b+8*c)*y1[svm2$index[3]]
+mm4 <- (a+9*b+3*c)*y1[svm2$index[4]]
+mnew <- c(mm1, mm2, mm3, mm4)
+mnew
+error <- 1-(mnew/m)
+objf2 <- 1/m+.2*sum(error) # min of objective function
+error
+objf2
+```
+
+
+```{r}
+# Cost=0.15
+svm3 <- svm(y~x1+x2, data=dd4, kernel="linear", cost=.15, scale=FALSE)
+plot(svm3,dd4)
+svm3
+svm3$index
+dd4[svm3$index,]
+aa <- -(8*b+11*c)/2
+m2 <- aa + 6*b+6*c
+c(m2, aa, b, c)
+# when cost=0.15
+# margin=1.664479, -6.785955+0.6401844X1+0.7682213X2=0
+mm1 <- (aa+2*b+5*c)*y1[svm3$index[1]]
+mm2 <- (aa+5*b+4*c)*y1[svm3$index[2]]
+mm3 <- (aa+3*b+8*c)*y1[svm3$index[3]]
+mm4 <- (aa+6*b+6*c)*y1[svm3$index[4]]
+mm5 <- (aa+9*b+3*c)*y1[svm3$index[5]]
+mnew <- c(mm1, mm2, mm3, mm4, mm5)
+error <- 1-(mnew/m2)
+objf3 <- 1/m2+.15*sum(error)
+c(error, objf3) # We allow for 3 observation to fall on the incorrect side of the margin
+c(objf1, objf2, objf3)
+```
+
 
 # **Lesson 7: SVM 2, Naive Bayes Classifer & K-Nearest Neighbors Classifier**
 
-## SVM 2: 
+## SVM 2:
 
 -   **SVM 2 is put together with Lesson 6 SVM part**
 
@@ -2026,7 +2144,244 @@ $$
 P(E_1E_2...E_n) = P(E_1) \times P(E_2|E_1) \times P(E_3|E_1E_2)\times ...\times P(E_n|E_1E_2...E_{n-1})
 $$
 
--   NBC Assumptions (To add in during lecture)
+
+
+![](images/Lesson7_img1.png)
+
+-   NBC Assumptions 
+
+    - Without NBC Assumptions
+    
+      -   By extension of the above, "Generalized Multiplication Rule of Probability", we have the formula below:
+      
+    - With NBC Assumptions
+    
+      -   Simplifies the above formula as it assume independence of all the features. We focus mainly on the numerator.
+      -   Assume numerical independent variable to be drawn from a univariate normal distribution
+      
+$$
+      X_j | Y = k ~ N(\mu_{jk},\sigma^2_{jk})      
+$$
+      
+      -   Assume categorical independent variable by their proportion of observations for the predictor corresponding to each class
+      
+### Numerical Example
+
+-   Explore the dataset values
+```{r}
+#naive bayes example with qualitative independent variables only
+library(MASS)
+library(e1071)
+spam <- read.csv("Datasets/Spam.csv", stringsAsFactors = TRUE)
+summary(spam)
+table(spam$Spam, spam$Discount)
+table(spam$Spam, spam$Money)
+table(spam$Spam, spam$Cheap)
+#table(spam$Spam, spam$Discount, spam$Money)
+#table(spam$Spam, spam$Discount, spam$Money, spam$Cheap)
+```
+
+-   The tables above is made into probabilities via the nb.fit automatically.
+
+```{r}
+nb.fit <- naiveBayes(Spam~., data = spam)
+nb.fit
+```
+
+For example:
+
+$$
+P(Spam=No | Discount=No) =78/(2+78)=0.975
+$$
+
+-   Checking accuracy of prediction
+
+```{r}
+nb.class <- predict(nb.fit, spam)
+table(nb.class, spam$Spam)
+mean(nb.class == spam$Spam)
+```
+
+-   To get the predicted probability of each observation
+
+For example, we look into the 6th and 15th observation:
+```{r}
+nb.preds <- predict(nb.fit, spam, 
+                    type="raw")
+nb.class[c(5, 16)] # Real data
+nb.preds[c(5, 16),] # Predicted data
+spam[c(5,16),]
+```
+Based on the table above, we can manually calculated the probability. 
+
+For observation 5:
+
+$$
+P(Y=Yes) \times P(Y =Yes | Discount = Yes) \times P(Y = Yes | Money = Yes) \times P(Y=Yes | Cheap = No) 
+$$
+
+```{r}
+# verify the 5th obs. P(Spam=Yes|X)=0.82727
+psx <- 0.2*0.25*0.4*0.7
+```
+
+$$
+P(Y=No) \times P(Y =No | Discount = Yes) \times P(Y = No | Money = Yes) \times P(Y=No | Cheap = No) 
+$$
+
+```{r}
+pnsx <- 0.8*0.025*0.1625*0.9
+```
+
+Hence the probability is:
+```{r}
+probs5 <- psx/(psx+pnsx)
+probs5
+```
+
+Do the same for observation 16:
+
+```{r}
+# verify the 16th obs. P(Spam=Yes|X)=0.2691014
+psx <- 0.2*0.75*0.4*0.7
+pnsx <- 0.8*0.975*0.1625*0.9
+probs16 <- psx/(psx+pnsx)
+probs16
+
+```
+
+Do the same for observation 11:
+```{r}
+nb.class[11]
+nb.preds[11,]
+spam[11,]
+
+# verify the 11th obs. P(Spam=No|X)=0.7075548
+psx <- 0.2*0.75*0.6*0.3
+pnsx <- 0.8*0.975*0.8375*0.1
+probs11 <- pnsx/(psx+pnsx)
+probs11
+
+```
+
+```{r}
+lda.fit <- lda(Spam~., data =spam)
+lda.fit
+lda.pred <- predict(lda.fit, spam)
+lda.class <- lda.pred$class
+table(lda.class, spam$Spam)
+mean(lda.class == spam$Spam)
+
+lda.pred$posterior[c(5,16),]
+table(lda.class, nb.class)
+
+```
+
+
+### NBC with both qualitative & quantitative features
+
+#### Exploring the dataset
+```{r}
+#naive bayes with quantitative and qualitative independent variables
+library(e1071)
+bonus <- read.csv("Datasets/Bonus.csv", stringsAsFactors = TRUE)
+summary(bonus)
+table(bonus$Bonus, bonus$Local)
+table(bonus$Bonus, bonus$Size)
+```
+
+#### Calculating mean and standard deviation
+
+-   The mean and sd is used to calculate the probability of Y condition on numerical feature, X.
+
+```{r}
+roeNo.mean <- mean(bonus$ROE[bonus$Bonus=="No"])
+roeNo.sd <- sd(bonus$ROE[bonus$Bonus=="No"])
+roeYes.mean <- mean(bonus$ROE[bonus$Bonus=="Yes"])
+roeYes.sd <- sd(bonus$ROE[bonus$Bonus=="Yes"])
+c(roeNo.mean,roeNo.sd)
+c(roeYes.mean,roeYes.sd)
+
+sgrNo.mean <- mean(bonus$SGR[bonus$Bonus=="No"])
+sgrNo.sd <- sd(bonus$SGR[bonus$Bonus=="No"])
+sgrYes.mean <- mean(bonus$SGR[bonus$Bonus=="Yes"])
+sgrYes.sd <- sd(bonus$SGR[bonus$Bonus=="Yes"])
+c(sgrNo.mean, sgrNo.sd)
+c(sgrYes.mean, sgrYes.sd)
+
+```
+
+-   **The model results are:**
+
+```{r}
+nb.fit <- naiveBayes(Bonus~., data = bonus)
+nb.fit
+nb.class <- predict(nb.fit, bonus)
+table(nb.class, bonus$Bonus)
+mean(nb.class == bonus$Bonus)
+```
+
+**Note:**
+
+Since ROE and SGR are numeric, the values associated above is the mean and standard deviation of the variable according to the $Y$ class it associates to.
+
+
+#### To calculate the conditional probability manually
+
+-   We look into observation 20 and 50:
+
+```{r}
+nb.preds <- predict(nb.fit, bonus, type="raw")
+nb.class[c(20, 50)]
+nb.preds[c(20, 50),]
+bonus[c(20,50),]
+```
+
+```{r}
+# verify the 20th obs. P(Bonus=Yes|X)=0.0482301
+p_yes <- dnorm(-40.5, 
+               nb.fit$table$ROE[2,1], # Mean of ROE for Y = Yes
+               nb.fit$table$ROE[2,2]) # SD of ROE for Y = Yes
+p_no <- dnorm(-40.5, 
+              nb.fit$table$ROE[1,1], # Mean of ROE for Y = No
+              nb.fit$table$ROE[1,2]) # SD of ROE for Y = No
+proe_yes <- p_yes/(p_yes+p_no)
+proe_yes
+```
+
+```{r}
+p_yes <- dnorm(7.5, 
+               nb.fit$table$SGR[2,1], # Mean of SGR for Y = Yes
+               nb.fit$table$SGR[2,2]) # Mean of SGR for Y = Yes
+p_no <- dnorm(7.5, 
+              nb.fit$table$SGR[1,1], # Mean of SGR for Y= No
+              nb.fit$table$SGR[1,2]) # SD of SGR for Y = No
+psgr_yes <- p_yes/(p_yes+p_no)
+psgr_yes
+```
+
+
+**We can then calculate the probability of observation 20's class.**
+
+$$
+P(Bonus=Yes) \times P(Bonus =Yes | Local = Yes) \times P(Bonus = Yes | Size = Small) \times P(Bonus =Yes | ROE = -40.5) \times P(Bonus = Yes | SGR = 7.5)
+$$
+```{r}
+psx <- nb.fit$apriori[2]*nb.fit$table$Local[2,2]*nb.fit$table$Size[2,3]*proe_yes*psgr_yes
+```
+
+$$
+P(Bonus=No) \times P(Bonus =No | Local = Yes) \times P(Bonus = No | Size = Small) \times P(Bonus =No | ROE = -40.5) \times P(Bonus = No | SGR = 7.5)
+$$
+
+```{r}
+pnsx <- nb.fit$apriori[1]*nb.fit$table$Local[1,2]*nb.fit$table$Size[1,3]*(1-proe_yes)*(1-psgr_yes)
+```
+
+```{r}
+probs20 <- psx/(psx+pnsx)
+probs20
+```
 
 ### Summary
 
@@ -2038,10 +2393,7 @@ $$
 
 -   Ideal for datasets with many qualitative independent variables
 
-
-
 ## K-Nearest Neighbors Classifer
-
 
 ### Similarity and distances
 
@@ -2056,7 +2408,7 @@ $$
 -   Manhattan Distance
 
     -   Defined as the total distance you would travel if you could move along horizontal & vertical lines (Like in a grid)
-    
+
 $$
 d(x,y)=\sum^n_{i=1} |x_i-y_i|
 $$
@@ -2064,33 +2416,59 @@ $$
 -   Minkowski Distance
 
     -   Defined as a family of distances which includes both Euclidean and Manhattan distances as special cases
-    
+
 $$
 d(x,y)=(\sum^n_{i=1}(x_i-y_i)^p)^{\frac{1}{p}}
 $$
 
 ### Steps of KNN Classifer
 
-1.    Select the optimal value of K
+1.  Select the optimal value of K
 
-2.    Calculate distance
+2.  Calculate distance
 
-      -   To measure the similarity between target and training data points, Euclidean distance is used.
-      -   Distance between data points in the dataset and the target point is calculated
-      
-3.    Finding nearest neighbors
+    -   To measure the similarity between target and training data points, Euclidean distance is used.
+    -   Distance between data points in the dataset and the target point is calculated
 
-      -   K data points with the smallest distances to the target point are the nearest neighbors
-      
-4.    Voting for classification
-      
-      -   These closest points are called neighbors. The algorithm then looks at which category the neighbors belong to and picks the one that appears the most (Majority vote).
-      
+3.  Finding nearest neighbors
+
+    -   K data points with the smallest distances to the target point are the nearest neighbors
+
+4.  Voting for classification
+
+    -   These closest points are called neighbors. The algorithm then looks at which category the neighbors belong to and picks the one that appears the most (Majority vote).
+
 Note: Since algorithm relies on distance, scaling (normalising) the training data can greatly improve its accuracy
 
 ### Numerical example
 
+```{r}
+# K-Nearest Neighbors Classifier
+library(class)
+library(ISLR2)
+# use Smarket data in ISLR2 library
+summary(Smarket)
+attach(Smarket)
+```
+
+
+```{r}
+# Train-test Split
+train <- (Smarket$Year <2005) 
+train.X <- cbind(Lag1, Lag2)[train,]
+test.X <- cbind(Lag1, Lag2)[!train,]
+train.Direction <- Direction[train]
+Direction.2005 <- Direction[!train]
+
+# Model creation & prediction
+set.seed(1)
+knn.pred <- knn(train.X, test.X, train.Direction, k=3) # KNN Classifier takes in a matrix form.
+table(knn.pred, Direction.2005)
+mean(knn.pred == Direction.2005)
+```
+
 ### Summary
+
 ```{r, echo = FALSE}
 library(knitr)
 
@@ -2105,7 +2483,6 @@ data <- data.frame(
 kable(data, caption = "Advantages & Disadvantages of KNN")
 ```
 
-
 # **Lesson 8: Moving Beyond Linearity**
 
 ## Polynomial regression
@@ -2115,8 +2492,6 @@ kable(data, caption = "Advantages & Disadvantages of KNN")
 ## Step functions
 
 -   Cut the range of a variable into K distinct regions and then fit a piecewise constant function
-
-
 
 ## Regression splines
 
@@ -2130,19 +2505,7 @@ kable(data, caption = "Advantages & Disadvantages of KNN")
 
 -   Extend above techniques to deal with multiple predictors
 
-
 # **Lesson 9**
 
-
-
 # **Lesson 10**
-
-
-
-
-
-
-
-
-
 
